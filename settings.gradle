@@ -1,0 +1,34 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+
+        maven {
+            url "https://repository.tnkad.net:8443/repository/android/"
+        }
+
+        maven { url "https://artifact.bytedance.com/repository/pangle" } // max 혹은 pangle 연동 시 추가
+        maven { url "https://cboost.jfrog.io/artifactory/chartboost-ads/" } // max 혹은 chartboost 연동 시 추가
+
+        maven { url "https://s3.amazonaws.com/smaato-sdk-releases/" } // max 연동 시 추가
+        maven { url "https://verve.jfrog.io/artifactory/verve-gradle-release" } // max 연동 시 추가
+        maven { url "https://artifactory.bidmachine.io/bidmachine" } // max 연동 시 추가
+        maven { url "https://maven.ogury.co" } // max 연동 시 추가
+        maven { url "https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_oversea" } // max 연동 시 추가
+        maven { url "https://android-sdk.is.com" } // max 연동 시 추가
+        maven { url "https://repo.pubmatic.com/artifactory/public-repos" } // max 연동 시 추가
+        maven { url "https://verve.jfrog.io/artifactory/verve-gradle-release" } // max 연동 시 추가
+
+        maven { url "https://repository.tnkad.net:8443/repository/public/" } // tnkpub 연동 시 추가
+    }
+}
+
+include(':app')
