@@ -62,7 +62,6 @@
   * [Rewarded Interstitial Ads](#rewarded-interstitial-ads)
 * [API Documentation](./docs/api_documentation.md)
 * [Error Information](./docs/error_info.md)
-* [Reward Callback](./docs/reward_callback_info.md)
 * [Release Note](https://github.com/tnkfactory/REVUP-ANDROID-SDK/wiki/release_note)
 
 <br/>
@@ -111,7 +110,6 @@ repositories {
 
 * `adiscope_media_id`: 매체 아이디
 * `adiscope_media_secret`: 매체 시크릿키
-* `adiscope_sub_domain`: 옵션값 ([오퍼월 상세페이지 이동 기능](./docs/api_documentation.md#showdetail)에 사용하는 값으로, 필요 시 담당자 전달 예정)
 
 
 ```groovy
@@ -119,8 +117,7 @@ android {
     defaultConfig {
         manifestPlaceholders = [
             adiscope_media_id    : "media id 기입필요",
-            adiscope_media_secret: "media secret 기입필요",
-            adiscope_sub_domain  : "" // 옵션값으로 사용 시 value에 전달값을 기입
+            adiscope_media_secret: "media secret 기입필요"
         ]
     }
 }
@@ -264,9 +261,6 @@ RevupSdk.initialize(
     if (isSuccess) {
         Log.d(TAG, "RevupSdk initialized.")
         // (recommend) get ad instance and set ad event listener
-        mOfferwallAd = RevupSdk.getOfferwallAdInstance(this)
-        mOfferwallAd.setOfferwallAdListener(this)
-
         mRewardedVideoAd = RevupSdk.getRewardedVideoAdInstance(this)
         mRewardedVideoAd.setRewardedVideoAdListener(this)
 
@@ -300,9 +294,6 @@ RevupSdk.initialize(
     if (isSuccess) {
         Log.d(TAG, "RevupSdk initialized.")
         // (recommend) get ad instance and set ad event listener
-        mOfferwallAd = RevupSdk.getOfferwallAdInstance(this)
-        mOfferwallAd.setOfferwallAdListener(this)
-
         mRewardedVideoAd = RevupSdk.getRewardedVideoAdInstance(this)
         mRewardedVideoAd.setRewardedVideoAdListener(this)
 
@@ -341,7 +332,7 @@ RevupSdk.initialize(this, mediaId, mediaSecret, callbackTag, new RevupInitialize
     })
 ```
 * 참여/시청한 광고에 대한 보상 지급을 위한 사용자 아이디 및 사용자 타입 설정
-  * `Offerwall`, `Rewarded Video`, `Interstitial`, `Rewarded Interstitial` 사용 시 필수 설정
+  * `Rewarded Video`, `Interstitial`, `Rewarded Interstitial` 사용 시 필수 설정
 * SDK 초기화 이전 또는 광고 로드 전에 호출되어야 함
 * 다계정 사용이 가능한 서비스일 경우, 계정 변경 시 `setUserIdChild` 호출로 레브업에 변경 정보를 전달해주어야 함
   * 그렇지 않을 경우 변경된 계정 정보로 보상 지급이 되지 않음

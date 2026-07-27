@@ -6,7 +6,7 @@ android {
         manifestPlaceholders = [
                 adiscope_media_id: "media id 기입필요",
                 adiscope_media_secret: "media secret 기입필요",
-                adiscope_sub_domain: "" // 옵션값(오퍼월 상세페이지 이동 기능)으로 사용 시 value에 전달값을 기입
+                adiscope_sub_domain: "" // 옵션값 (필요 시 담당자 전달값 기입)
         ]
 
         applicationId "com.nps.sample"

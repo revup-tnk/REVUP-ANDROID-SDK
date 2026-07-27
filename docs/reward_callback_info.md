@@ -16,7 +16,7 @@
 * URL_PARAMETERS는 이하 [Revup Server Parameters](#revup-server-parameters) 를 참조합니다.
 * Example
   * Placeholder의 값은 고정되어 있습니다. 이하 응답값에 대한 Key(userID, unit 등...)은 자유로운 포맷으로 사용할 수 있습니다.
-  * http<span>s://</span>my-server.com/anypath?transactionId=[TRANSACTION_ID]&signature=[SIGNATURE]&unitID=[UNIT_ID]&userID=[USER_ID]&adid=[ADID]&rewardUnit=[REWARD_UNIT]&rewardAmount=[REWARD_AMOUNT]&network=[NETWORK]&adname=[ADNAME]&shareAdType=[SHARE_ADTYPE]&customData=[CUSTOM_DATA]
+  * http<span>s://</span>my-server.com/anypath?transactionId=[TRANSACTION_ID]&signature=[SIGNATURE]&unitID=[UNIT_ID]&userID=[USER_ID]&adid=[ADID]&rewardUnit=[REWARD_UNIT]&rewardAmount=[REWARD_AMOUNT]&network=[NETWORK]&adname=[ADNAME]&customData=[CUSTOM_DATA]
 
 <br/><br/>
 
@@ -33,7 +33,6 @@
 | rewardAmount  | REWARD_AMOUNT  | 보상 지급 수량                         |
 | network       | NETWORK        | 보상 지급 네트워크사                      |
 | adname        | ADNAME         | 광고명                              |
-| shareAdType   | SHARE_ADTYPE   | Offerwall or Sponsorship         |
 | customData    | CUSTOM_DATA    | setRewardedCheckParam으로 설정 된 값   |
 
 * signature의 검증은 Revup Admin Page에서 발급받은 **secretKey**와 Callback의 parameters을 통해 값을 검증하게 됩니다. 외부 사용자는 secretKey를 발급받기 위해서는 Revup 담당자를 통해서 발급받아 사용합니다.

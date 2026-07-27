@@ -11,8 +11,6 @@ import com.tnkfactory.revup.RevupSdk;
 import com.tnkfactory.revup.interstitial.InterstitialAd;
 import com.tnkfactory.revup.interstitial.InterstitialAdListener;
 import com.tnkfactory.revup.listener.RevupInitializeListener;
-import com.tnkfactory.revup.offerwall.OfferwallAd;
-import com.tnkfactory.revup.offerwall.OfferwallAdListener;
 import com.tnkfactory.revup.reward.RewardItem;
 import com.tnkfactory.revup.reward.RewardedVideoAd;
 import com.tnkfactory.revup.reward.RewardedVideoAdListener;
@@ -25,18 +23,16 @@ import com.tnkfactory.revup.rewardedinterstitial.RewardedInterstitialAdShowListe
  *     - need to add meta-data (com.google.android.gms.ads.APPLICATION_ID) to AndroidManifest.xml
  *
  */
-public class MainActivity extends Activity implements RewardedVideoAdListener, OfferwallAdListener, InterstitialAdListener, RewardedInterstitialAdShowListener {
+public class MainActivity extends Activity implements RewardedVideoAdListener, InterstitialAdListener, RewardedInterstitialAdShowListener {
 
     private static final String TAG = MainActivity.class.getName();
 
     private String SAMPLE_MEDIA_ID = "";
     private String SAMPLE_MEDIA_SECRET = "";
-    private String SAMPLE_OFFERWALL_UNIT = "";
     private String SAMPLE_REWARDED_VIDEO_UNIT = "";
     private String SAMPLE_INTERSTITIAL_UNIT = "";
     private String[] SAMPLE_REWARDED_INTERSTITIAL_UNIT = {};
 
-    private static OfferwallAd mOfferwallAd;
     private static RewardedVideoAd mRewardedVideoAd;
     private static InterstitialAd mInterstitialAd;
     private static RewardedInterstitialAd mRewardedInterstitialAd;
@@ -51,9 +47,6 @@ public class MainActivity extends Activity implements RewardedVideoAdListener, O
             @Override
             public void onInitialized(boolean isSuccess) {
                 if (isSuccess) {
-                    // get offerwall singleton instance
-                    mOfferwallAd = RevupSdk.getOfferwallAdInstance(MainActivity.this);
-
                     // get rewardVideo singleton instance
                     mRewardedVideoAd = RevupSdk.getRewardedVideoAdInstance(MainActivity.this);
 
@@ -63,7 +56,6 @@ public class MainActivity extends Activity implements RewardedVideoAdListener, O
                     mRewardedInterstitialAd = RevupSdk.getRewardedInterstitialAdInstance(MainActivity.this);
 
                     // set listener
-                    mOfferwallAd.setOfferwallAdListener(MainActivity.this);
                     mRewardedVideoAd.setRewardedVideoAdListener(MainActivity.this);
                     mInterstitialAd.setInterstitialAdListener(MainActivity.this);
                     mRewardedInterstitialAd.setRewardedInterstitialAdListener(MainActivity.this);
@@ -75,17 +67,6 @@ public class MainActivity extends Activity implements RewardedVideoAdListener, O
 
         // set userId (user unique id)
         RevupSdk.setUserId("testUserId");
-
-        ((Button) findViewById(R.id.btnShowOfferwall)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // show offerwall
-
-                String[] excludeType = new String[]{}; // excludeType List
-                // ex) [CPI, CPE, CPS, CPA]
-                mOfferwallAd.show(MainActivity.this, SAMPLE_OFFERWALL_UNIT, excludeType);
-            }
-        });
 
         ((Button) findViewById(R.id.btnLoadVideo)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,23 +133,6 @@ public class MainActivity extends Activity implements RewardedVideoAdListener, O
     @Override
     public void onRewardedVideoAdFailedToShow(String unitId, RevupError revupError) {
         Log.e(TAG, "onRewardedVideoAdFailedToLoad : " + revupError);
-    }
-    // endregion
-
-    // region implementation OfferwallAdListener
-    @Override
-    public void onOfferwallAdOpened(String unitId) {
-        Log.d(TAG, "onOfferwallAdOpened");
-    }
-
-    @Override
-    public void onOfferwallAdFailedToShow(String unitId, RevupError revupError) {
-        Log.e(TAG, "onRewardedVideoAdFailedToLoad : " + revupError);
-    }
-
-    @Override
-    public void onOfferwallAdClosed(String unitId) {
-        Log.d(TAG, "onOfferwallAdClosed");
     }
     // endregion
 

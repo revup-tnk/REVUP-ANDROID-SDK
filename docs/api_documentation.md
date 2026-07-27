@@ -14,7 +14,6 @@ API Reference
       - [getInterstitialAdInstance](#getinterstitialadinstance)
       - [getRewardedVideoAdInstance](#getrewardedvideoadinstance)
       - [getRewardedInterstitialAdInstance](#getrewardedinterstitialadinstance)
-      - [getOfferwallAdInstance](#getofferwalladinstance)
       - [getAdEventInstance](#getadeventinstance)
       - [getOptionSetterInstance](#getoptionsetterinstance)
   - [API Reference - OptionSetter.Android](#api-reference---optionsetterandroid)
@@ -43,10 +42,6 @@ API Reference
       - [show](#show-2)
       - [showWithPopup](#showwithpopup)
       - [getUnitStatus (RI)](#getunitstatus-ri)
-  - [API Reference - OfferwallAd.Android](#api-reference---offerwalladandroid)
-    - [OfferwallAd](#offerwallad)
-      - [show](#show-3)
-      - [showDetail](#showdetail)
 
 ## API Reference - RevupSdk.Android
 ### RevupSdk
@@ -77,8 +72,6 @@ public class RevupSdk {
     public static String getSDKVersion()
 
     public static String getNetworksVersion()
-
-    public static OfferwallAd getOfferwallAdInstance(Activity activity)
 
     public static RewardedVideoAd getRewardedVideoAdInstance(Activity activity)
 
@@ -124,7 +117,7 @@ public static void initialize(Activity activity, String mediaId, String mediaSec
 |   `mediaId`   | 매체 아이디 (Revup에 문의)                                                                                                                                                                                                    |
 | `mediaSecret` | 매체 시크릿키 (Revup에 문의)                                                                                                                                                                                                   |
 | `callbackTag` | 보상 콜백을 복수 개로 등록해서 사용할 시에 어떤 보상 콜백을 사용할지 지정됨. 지정하지 않을 시 빈값(`""`)으로 지정하며, 이때 기본 보상콜백이 사용됨 (복수 개 사용 시 Revup에 문의)                                                                                                         |
-|   `childYN`   | 어린이인지 아닌지의 여부를 설정해주는 값으로 Google GMA에 세팅됨.<br/>Revup에서는 Google Play 가족 정책을 준수해야 함([Revup Google Play 가족 정책 확인](./families-policy.md)) <br/><span style="color:red">정책 미준수 시 광고에 제한이 생김</span>(광고 물량 축소 및 오퍼월 진입 불가) |
+|   `childYN`   | 어린이인지 아닌지의 여부를 설정해주는 값으로 Google GMA에 세팅됨.<br/>Revup에서는 Google Play 가족 정책을 준수해야 함([Revup Google Play 가족 정책 확인](./families-policy.md)) <br/><span style="color:red">정책 미준수 시 광고에 제한이 생김</span>(광고 물량 축소) |
 
 <br/>
 
@@ -164,7 +157,7 @@ enum class RevupUserType(val value: Int, val childYN: String) {
 * 광고를 시청할 유저가 어린이인지 아닌지의 여부를 설정한다. 
   * 이 설정값은 그대로 Google GMA 에 세팅된다.
 * Revup에서는 Google Play 가족 정책을 준수해야 한다. ([Revup Google Play 가족 정책 확인](./families-policy.md))
-  * <span style="color:red">정책 미준수 시 광고에 제한이 생김</span> (광고 물량 축소 및 오퍼월 진입 불가)
+  * <span style="color:red">정책 미준수 시 광고에 제한이 생김</span> (광고 물량 축소)
 
 <br/>
 
@@ -230,7 +223,7 @@ public class UnitStatus {
 | `callback` | 결과를 리턴받을 콜백 객체 |
 
 * 유닛의 상태 정보를 구한다.
-  * RV, 오퍼월 유닛의 상태를 확인할 수 있다.
+  * RV 유닛의 상태를 확인할 수 있다.
 * `IUnitStatus` 객체의 `onResult` 콜백을 통해 결과를 받을 수 있다.
 * Revup 이니셜라이즈가 먼저 진행되어야 한다.
 
@@ -277,16 +270,6 @@ public static RewardedVideoAd getRewardedVideoAdInstance(Activity activity)
 public static RewardedInterstitialAd getRewardedInterstitialAdInstance(Activity activity)
 ```
 * `RewardedInterstitialAd`의 전역 Singleton 객체를 생성한다.
-    * Revup 이니셜라이즈에 대한 콜백 리스너인 `RevupInitializeListener`의 콜백함수 `onInitialized` 의 `isSuccess` 값을 true로 받은 뒤 객체를 생성해주어야 한다.
-        * `isSuccess` 값이 false일 경우에 인스턴스를 가져올 경우 null 반환
-
-<br/>
-
-#### getOfferwallAdInstance
-```java
-public static OfferwallAd getOfferwallAdInstance(Activity activity)
-```
-* `OfferwallAd`의 전역 Singleton 객체를 생성한다.
     * Revup 이니셜라이즈에 대한 콜백 리스너인 `RevupInitializeListener`의 콜백함수 `onInitialized` 의 `isSuccess` 값을 true로 받은 뒤 객체를 생성해주어야 한다.
         * `isSuccess` 값이 false일 경우에 인스턴스를 가져올 경우 null 반환
 
@@ -347,7 +330,7 @@ void setChildYN(String childYN);
 * 광고를 시청할 유저가 어린이인지 아닌지의 여부를 설정한다. 
   * 이 설정값은 그대로 Google GMA 에 세팅된다.
 * Revup에서는 Google Play 가족 정책을 준수해야 한다. ([Revup Google Play 가족 정책 확인](./families-policy.md))
-  * <span style="color:red">정책 미준수 시 광고에 제한이 생김</span> (광고 물량 축소 및 오퍼월 진입 불가)
+  * <span style="color:red">정책 미준수 시 광고에 제한이 생김</span> (광고 물량 축소)
 
 <br/>
 
@@ -730,78 +713,5 @@ public class UnitStatus {
 
 * 보상형 전면광고 유닛의 상태를 확인한다.
 * `IUnitStatus` 객체의 `onResult` 콜백을 통해 결과를 받을 수 있다.
-
-<br/>
-
-## API Reference - OfferwallAd.Android
-
-### OfferwallAd
-```java
-public interface OfferwallAd {
-
-    boolean show(Activity activity, String unitId, String[] excludeAdTypeList)
-
-    boolean showDetail(Activity activity, String unitId, String[] excludeAdTypeList, int sponsorshipItemId)
-
-    boolean showDetail(Activity activity, String url)
-
-    void setOfferwallAdListener(OfferwallAdListener offerwallAdListener)
-}
-        
-    public interface OfferwallAdListener {
-
-    void onOfferwallAdOpened(String unitId)
-
-    void onOfferwallAdFailedToShow(String unitId, RevupError error)
-
-    void onOfferwallAdClosed(String unitId)
-}    
-```
-
-<br/>
-
-#### show
-```java
-boolean show(Activity activity, String unitId, String[] excludeAdTypeList)
-```
-| Parameters          |                                  |
-|---------------------|----------------------------------|
-| `activity`          | 상위 액티비티                          |
-| `unitId`            | 오퍼월 광고 unit id                   |
-| `excludeAdTypeList` | 구매 제한 타입 리스트<br/>ex) `[ "CPS" ]` |
-
-**Callback**
-
-| Method                      | Info               | Parameter                          |
-|-----------------------------|--------------------|------------------------------------|
-| `onOfferwallAdOpened`       | 오퍼월 광고가 열릴 때       | String unitId                      |
-| `onOfferwallAdClosed`       | 오퍼월 광고가 닫혔을 때      | String unitId                      |
-| `onOfferwallAdFailedToShow` | 오퍼월 광고를 보여줄 수 없을 때 | String unitId, RevupError error |
-* 오퍼월 광고를 사용자에게 표시한다.
-* show가 정상적으로 시작되면 `true`, 만약 이미 다른 show가 처리되는 중이라면 `false`를 반환한다.
-* show가 실행되면 (return값이 `true`일 경우) `onOfferwallAdOpened`, `onOfferwallAdFailedToShow` 중 하나가 항상 호출된다.
-    * `onOfferwallAdOpened`가 호출되었다면 이후 `onOfferwallAdClosed`가 항상 호출된다.
-
-<br/>
-
-#### showDetail
-```java
-boolean showDetail(Activity activity, String unitId, String[] excludeAdTypeList, int sponsorshipItemId)
-
-boolean showDetail(Activity activity, String url)
-```
-
-| Parameters          |                                                                 |
-|---------------------|-----------------------------------------------------------------|
-| `activity`          | 상위 액티비티                                                         |
-| `unitId`            | 로드 여부를 체크할 인터스티셜 광고의 unit id                                    |
-| `excludeAdTypeList` | 구매 제한 타입 리스트<br/>ex) `[ "CPS" ]`                                |
-| `sponsorshipItemId` | 이동하고자 할 스폰서십의 item id. Admin page에 등록된 id와 동일해야 한다.             |
-| `url`               | mediaId, unitId, excludeAdTypes, sponsorshipItemId가 포함된 형식의 url |
-
-* 특정 광고 아이템의 상세 페이지로 이동한다.
-* showDetail이 정상적으로 시작되면 `true`, 그렇지 않다면 `false`를 반환한다.
-* showDetail이 실행되면 (return값이 `true`일 경우) `onOfferwallAdOpened`, `onOfferwallAdFailedToShow` 중 하나가 항상 호출된다.
-    * `onOfferwallAdOpened`가 호출되었다면 이후 `onOfferwallAdClosed`가 항상 호출된다.
 
 <br/>

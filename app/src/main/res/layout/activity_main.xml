@@ -7,12 +7,6 @@
     tools:context="com.nps.sample.MainActivity">
 
     <Button
-        android:id="@+id/btnShowOfferwall"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Show Offerwall" />
-
-    <Button
         android:id="@+id/btnLoadVideo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

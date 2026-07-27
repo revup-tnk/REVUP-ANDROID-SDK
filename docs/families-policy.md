@@ -27,7 +27,7 @@
 
 ### 3단계 : SDK 초기화 시 혹은 광고 유닛 호출 전 유저 정보 설정하기
 - SDK 초기화 단계에 유저 정보 설정(`setUserIdChild` 호출)을 권고합니다. (앱 Flow에 적합한 시점으로 골라서 선택하시면 됩니다)
-- 다만, 불가피하게 위 시점에 전달이 어려운 경우 광고 유닛(Offerwall, RV, interstitial, RI) 로드 호출 전에 전으로 대체할 수 있으나 광고 수익에 영향이 갈 수 있습니다. (RV 및 Interstitial의 광고 효율 및 커버리지에 영향)
+- 다만, 불가피하게 위 시점에 전달이 어려운 경우 광고 유닛(RV, interstitial, RI) 로드 호출 전에 전으로 대체할 수 있으나 광고 수익에 영향이 갈 수 있습니다. (RV 및 Interstitial의 광고 효율 및 커버리지에 영향)
 
 <br/>
 
@@ -72,7 +72,7 @@ RevupSdk.initialize(this, mediaId, mediaSecret, callbackTag, new RevupInitialize
 <br/>
 
 ### 광고 유닛 호출 전
-- 광고 유닛(Offerwall, Rewarded Video, Interstitial) 호출 전 유저 정보를 set합니다.
+- 광고 유닛(Rewarded Video, Interstitial) 호출 전 유저 정보를 set합니다.
 ```java
 // none: RevupUserType.None (0)
 // adult: RevupUserType.Adult (1)
@@ -87,10 +87,10 @@ RevupSdk.setUserIdChild(userId, userType);
 - 퍼블리셔에서 Revup으로 전달한 childYN에 따른 Revup 광고 동작은 아래 표와 같습니다.
 - 정책에 따라 어린이로 간주되는 대상은 광고 활동에 제약이 있으며, 이로 인해 광고 효율 및 커버리지에 제한적인 영향이 있을 수 있습니다.
 
-|      childYN      |    Offerwall    | RV(Rewarded Video), Interstitial |
-|:-----------------:|:---------------:|:--------------------------------:|
-| `"YES"` or `Null` | 진입 불가, GAID 미전달 |    구글 인증 네트워크로만 표시, GAID 미전달     |   
-|      `"NO"`       | 진입 가능, GAID 전달  |       모든 네트워크 표시, GAID 전달        |
+|      childYN      | RV(Rewarded Video), Interstitial |
+|:-----------------:|:--------------------------------:|
+| `"YES"` or `Null` |    구글 인증 네트워크로만 표시, GAID 미전달     |
+|      `"NO"`       |       모든 네트워크 표시, GAID 전달        |
 
 <br/>
 
