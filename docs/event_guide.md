@@ -12,7 +12,7 @@
 
 ### 이벤트 모듈 참조 추가
 ```groovy
-implementation "com.tnkfactory.revup:revupLuckyEvent:5.1.6"
+implementation "com.tnkfactory.revup:revupLuckyEvent:1.0.0"
 ```
 
 

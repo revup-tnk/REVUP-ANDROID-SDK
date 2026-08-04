@@ -1,4 +1,4 @@
-package com.nps.sample;
+package com.tnkfactory.sample;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -166,6 +166,16 @@ public class MainActivity extends Activity implements RewardedVideoAdListener, I
     // endregion
 
     // region implementation RewardedInterstitialAdListener
+    @Override
+    public void onRewardedInterstitialAdLoaded(String unitId) {
+        Log.d(TAG, "onRewardedInterstitialAdLoaded");
+    }
+
+    @Override
+    public void onRewardedInterstitialAdFailedToLoad(String unitId, RevupError revupError) {
+        Log.e(TAG, "onRewardedInterstitialAdFailedToLoad : " + revupError);
+    }
+
     @Override
     public void onRewardedInterstitialAdSkipped(String unitId) {
         Log.d(TAG, "onRewardedInterstitialAdSkipped");

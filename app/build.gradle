@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
+    namespace "com.tnkfactory.sample"
     compileSdkVersion 35
     defaultConfig {
         manifestPlaceholders = [
@@ -9,7 +10,7 @@ android {
                 adiscope_sub_domain: "" // 옵션값 (필요 시 담당자 전달값 기입)
         ]
 
-        applicationId "com.nps.sample"
+        applicationId "com.tnkfactory.sample"
         minSdkVersion 23
         targetSdkVersion 35
         versionCode 1
@@ -31,15 +32,15 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    Dependency revupBom = platform("com.tnkfactory.revup:revup-bom:5.4.0")
+    Dependency revupBom = platform("com.tnkfactory.revup:revup-bom:1.0.0")
     implementation revupBom
 
     // [required] revup core library
     implementation "com.tnkfactory.revup:revupCore"
     implementation "com.tnkfactory.revup:revupAndroid"
 
-    // [optional] revup video simple integration library
-    implementation "com.tnkfactory.revup:revupWalnut"
+    // [optional] revup lucky event library
+    implementation "com.tnkfactory.revup:revupLuckyEvent"
 
     // [optional] revup network adapter library
     // bidding, waterfall adapter

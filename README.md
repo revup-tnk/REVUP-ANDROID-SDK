@@ -1,6 +1,6 @@
 # Revup-Android-Sample
-[![GitHub package.json version](https://img.shields.io/badge/Android-5.4.0-blue)](../../releases)
-[![GitHub package.json version](https://img.shields.io/badge/iOS-5.4.0-blue)](https://github.com/revup/revup-iOS-Sample)
+[![GitHub package.json version](https://img.shields.io/badge/Android-1.0.0-blue)](../../releases)
+[![GitHub package.json version](https://img.shields.io/badge/iOS-1.1.1-blue)](https://github.com/revup/revup-iOS-Sample)
 
 ## Requirements
 - minSdkVersion 23
@@ -37,15 +37,13 @@
 | Ogury               | 6.2.2           | O          |
 | Pangle              | 7.9.1.3         | O          |
 | Pubmatic            | 4.11.0          | O          |
-| TNKPub              | 7.25.05         | -          |
+| TNKPub              | 7.25.11         | -          |
 | Unity Ads           | 4.16.6          | O          |
 | Verve               | 3.8.1           | O          |
 
 > ⚠️ 애드몹 SDK(`com.google.android.gms:play-services-ads`)를 프로젝트에 이미 포함하고 있는 경우 버전 호환에 유의   
 > 기존에 gms SDK 사용중인 퍼블리셔는 admob, max 어댑터 사용 시 25버전으로 마이그레이션 필요 [(관련 문서)](https://developers.google.com/admob/android/migration?hl=en)
-> - gms 23 버전: 레브업 `4.1.0`~`4.3.2`
-> - gms 24 버전: 레브업 `4.4.0`~`5.3.0`
-> - gms 25 버전: 레브업 `5.4.0` 이상
+> - gms 25 버전: 레브업 `1.0.0` 이상 (현재 배포되는 모든 버전)
 
 </div>
 </details>
@@ -62,6 +60,7 @@
   * [Rewarded Interstitial Ads](#rewarded-interstitial-ads)
 * [API Documentation](./docs/api_documentation.md)
 * [Error Information](./docs/error_info.md)
+* [Reward Callback](./docs/reward_callback_info.md)
 * [Release Note](https://github.com/tnkfactory/REVUP-ANDROID-SDK/wiki/release_note)
 
 <br/>
@@ -125,17 +124,20 @@ android {
 
 <br/>
 
-`5.1.0` 버전부터 bom 연동 방식을 지원.   
+bom 연동 방식을 권장.   
 어댑터별 버전을 명시하지 않아도 코어 모듈 버전으로 매핑된 버전의 어댑터가 자동으로 연동됨
 ```groovy
 dependencies {
     // bom으로 연동 시 어댑터별 버전을 명시하지 않아도 코어 모듈 버전으로 매핑된 버전의 어댑터가 자동으로 연동됨
-    Dependency revupBom = platform("com.tnkfactory.revup:revup-bom:5.4.0")
+    Dependency revupBom = platform("com.tnkfactory.revup:revup-bom:1.0.0")
     implementation revupBom
   
     // [required] revup core library
     implementation "com.tnkfactory.revup:revupCore"
     implementation "com.tnkfactory.revup:revupAndroid"
+
+    // [optional] revup lucky event library
+    implementation "com.tnkfactory.revup:revupLuckyEvent"
     
     // [optional] revup network adapter library
     // bidding, waterfall adapter
@@ -176,11 +178,11 @@ dependencies {
 ```groovy
 dependencies {
     // [required] revup core library
-    implementation "com.tnkfactory.revup:revupCore:5.4.0"
-    implementation "com.tnkfactory.revup:revupAndroid:1.2.4"
+    implementation "com.tnkfactory.revup:revupCore:1.0.0"
+    implementation "com.tnkfactory.revup:revupAndroid:1.0.0"
 
-    // [optional] revup video simple integration library
-    implementation "com.tnkfactory.revup:revupWalnut:1.0.0"
+    // [optional] revup lucky event library
+    implementation "com.tnkfactory.revup:revupLuckyEvent:1.0.0"
   
     // [optional] revup network adapter library
     // bidding, waterfall adapter
@@ -195,7 +197,7 @@ dependencies {
     implementation "com.tnkfactory.revup:adapter.vungle:7.7.3.0"
 
     // direct sold adapter
-    implementation "com.tnkfactory.revup:adapter.tnkpub:7.25.05.0"
+    implementation "com.tnkfactory.revup:adapter.tnkpub:7.25.11.0"
 }
 ```
 <br/>
