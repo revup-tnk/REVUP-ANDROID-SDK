@@ -1,5 +1,5 @@
 # Revup-Android-Sample
-[![GitHub package.json version](https://img.shields.io/badge/Android-1.0.1-blue)](../../releases)
+[![GitHub package.json version](https://img.shields.io/badge/Android-1.0.2-blue)](../../releases)
 [![GitHub package.json version](https://img.shields.io/badge/iOS-1.1.1-blue)](https://github.com/revup/revup-iOS-Sample)
 
 ## Requirements
@@ -43,7 +43,7 @@
 
 > ⚠️ 애드몹 SDK(`com.google.android.gms:play-services-ads`)를 프로젝트에 이미 포함하고 있는 경우 버전 호환에 유의   
 > 기존에 gms SDK 사용중인 퍼블리셔는 admob, max 어댑터 사용 시 25버전으로 마이그레이션 필요 [(관련 문서)](https://developers.google.com/admob/android/migration?hl=en)
-> - gms 25 버전: 레브업 `1.0.1` 이상 (현재 배포되는 모든 버전)
+> - gms 25 버전: 레브업 `1.0.2` 이상 (현재 배포되는 모든 버전)
 
 </div>
 </details>
@@ -129,7 +129,7 @@ bom 연동 방식을 권장.
 ```groovy
 dependencies {
     // bom으로 연동 시 어댑터별 버전을 명시하지 않아도 코어 모듈 버전으로 매핑된 버전의 어댑터가 자동으로 연동됨
-    Dependency revupBom = platform("com.tnkfactory.revup:revup-bom:1.0.1")
+    Dependency revupBom = platform("com.tnkfactory.revup:revup-bom:1.0.2")
     implementation revupBom
   
     // [required] revup core library
@@ -178,26 +178,26 @@ dependencies {
 ```groovy
 dependencies {
     // [required] revup core library
-    implementation "com.tnkfactory.revup:revupCore:1.0.1"
-    implementation "com.tnkfactory.revup:revupAndroid:1.0.0"
+    implementation "com.tnkfactory.revup:revupCore:1.0.2"
+    implementation "com.tnkfactory.revup:revupAndroid:1.0.2"
 
     // [optional] revup lucky event library
-    implementation "com.tnkfactory.revup:revupLuckyEvent:1.0.0"
+    implementation "com.tnkfactory.revup:revupLuckyEvent:1.0.2"
   
     // [optional] revup network adapter library
     // bidding, waterfall adapter
-    implementation "com.tnkfactory.revup:adapter.admob:25.2.0.1"
+    implementation "com.tnkfactory.revup:adapter.admob:25.2.0.2"
     
     // bidding adapter
-    implementation "com.tnkfactory.revup:adapter.max:13.6.2.1"
+    implementation "com.tnkfactory.revup:adapter.max:13.6.2.2"
 
     // waterfall adapter
-    implementation "com.tnkfactory.revup:adapter.chartboost:9.11.0.1"
-    implementation "com.tnkfactory.revup:adapter.pangle:7.9.1.3.1"
-    implementation "com.tnkfactory.revup:adapter.vungle:7.7.3.1"
+    implementation "com.tnkfactory.revup:adapter.chartboost:9.11.0.2"
+    implementation "com.tnkfactory.revup:adapter.pangle:7.9.1.3.2"
+    implementation "com.tnkfactory.revup:adapter.vungle:7.7.3.2"
 
     // direct sold adapter
-    implementation "com.tnkfactory.revup:adapter.tnkpub:7.25.11.1"
+    implementation "com.tnkfactory.revup:adapter.tnkpub:7.25.11.2"
 }
 ```
 <br/>
