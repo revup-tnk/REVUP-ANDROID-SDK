@@ -1,5 +1,5 @@
 # Revup-Android-Sample
-[![GitHub package.json version](https://img.shields.io/badge/Android-1.0.2-blue)](../../releases)
+[![GitHub package.json version](https://img.shields.io/badge/Android-1.0.4-blue)](../../releases)
 [![GitHub package.json version](https://img.shields.io/badge/iOS-1.1.1-blue)](https://github.com/revup/revup-iOS-Sample)
 
 ## Requirements
@@ -61,6 +61,7 @@
 * [API Documentation](./docs/api_documentation.md)
 * [Error Information](./docs/error_info.md)
 * [Reward Callback](./docs/reward_callback_info.md)
+* [Third Party Event](./docs/event_guide.md)
 * [Release Note](https://github.com/tnkfactory/REVUP-ANDROID-SDK/wiki/release_note)
 
 <br/>
@@ -129,7 +130,7 @@ bom 연동 방식을 권장.
 ```groovy
 dependencies {
     // bom으로 연동 시 어댑터별 버전을 명시하지 않아도 코어 모듈 버전으로 매핑된 버전의 어댑터가 자동으로 연동됨
-    Dependency revupBom = platform("com.tnkfactory.revup:revup-bom:1.0.2")
+    Dependency revupBom = platform("com.tnkfactory.revup:revup-bom:1.0.4")
     implementation revupBom
   
     // [required] revup core library
@@ -178,26 +179,26 @@ dependencies {
 ```groovy
 dependencies {
     // [required] revup core library
-    implementation "com.tnkfactory.revup:revupCore:1.0.2"
-    implementation "com.tnkfactory.revup:revupAndroid:1.0.2"
+    implementation "com.tnkfactory.revup:revupCore:1.0.4"
+    implementation "com.tnkfactory.revup:revupAndroid:1.0.4"
 
     // [optional] revup lucky event library
-    implementation "com.tnkfactory.revup:revupLuckyEvent:1.0.2"
+    implementation "com.tnkfactory.revup:revupLuckyEvent:1.0.4"
   
     // [optional] revup network adapter library
     // bidding, waterfall adapter
-    implementation "com.tnkfactory.revup:adapter.admob:25.2.0.2"
+    implementation "com.tnkfactory.revup:adapter.admob:25.2.0.4"
     
     // bidding adapter
-    implementation "com.tnkfactory.revup:adapter.max:13.6.2.2"
+    implementation "com.tnkfactory.revup:adapter.max:13.6.2.4"
 
     // waterfall adapter
-    implementation "com.tnkfactory.revup:adapter.chartboost:9.11.0.2"
-    implementation "com.tnkfactory.revup:adapter.pangle:7.9.1.3.2"
-    implementation "com.tnkfactory.revup:adapter.vungle:7.7.3.2"
+    implementation "com.tnkfactory.revup:adapter.chartboost:9.11.0.4"
+    implementation "com.tnkfactory.revup:adapter.pangle:7.9.1.3.4"
+    implementation "com.tnkfactory.revup:adapter.vungle:7.7.3.4"
 
     // direct sold adapter
-    implementation "com.tnkfactory.revup:adapter.tnkpub:7.25.11.2"
+    implementation "com.tnkfactory.revup:adapter.tnkpub:7.25.11.4"
 }
 ```
 <br/>
