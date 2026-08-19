@@ -12,7 +12,7 @@
 
 ### 이벤트 모듈 참조 추가
 ```groovy
-implementation "com.tnkfactory.revup:revupLuckyEvent:1.0.4"
+implementation "com.tnkfactory.revup:revupLuckyEvent:1.0.5"
 ```
 
 
@@ -48,6 +48,16 @@ val scheme = "revup0000://thirdpartyevent?event_id=25120101&pub_id=00000000-0000
         startActivity(it)
     }
 ```
+
+scheme 으로 진입할 때 `event_id`(또는 `app_id`), `pub_id`(또는 `pid`), `md_user_nm` 은 필수입니다.
+하나라도 없으면 **안내 토스트가 표시된 뒤 화면이 닫히며**(`1.0.5` 이상), 누락된 항목은 logcat 에 출력됩니다.
+
+```
+E/RevupEvent: scheme parameter missing: md_user_nm
+```
+
+> SDK 초기화는 이벤트 화면이 진입 시점에 수행합니다. 앱의 패키지명이 등록되어 있지 않으면
+> 초기화가 실패하므로, 패키지명 변경이나 테스트용 패키지 사용 시 사전에 등록 요청 부탁드립니다.
 
 
 ---
