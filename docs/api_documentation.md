@@ -14,7 +14,6 @@ API Reference
       - [getInterstitialAdInstance](#getinterstitialadinstance)
       - [getRewardedVideoAdInstance](#getrewardedvideoadinstance)
       - [getRewardedInterstitialAdInstance](#getrewardedinterstitialadinstance)
-      - [getAdEventInstance](#getadeventinstance)
       - [getOptionSetterInstance](#getoptionsetterinstance)
   - [API Reference - OptionSetter.Android](#api-reference---optionsetterandroid)
     - [OptionSetter](#optionsetter)
@@ -78,8 +77,6 @@ public class RevupSdk {
     public static InterstitialAd getInterstitialAdInstance(Activity activity)
 
     public static RewardedInterstitialAd getRewardedInterstitialAdInstance(Activity activity)
-      
-    public static AdEvent getAdEventInstance(Activity activity)
 
     public static OptionSetter getOptionSetterInstance(Activity activity)
 
@@ -272,16 +269,6 @@ public static RewardedInterstitialAd getRewardedInterstitialAdInstance(Activity 
 * `RewardedInterstitialAd`의 전역 Singleton 객체를 생성한다.
     * Revup 이니셜라이즈에 대한 콜백 리스너인 `RevupInitializeListener`의 콜백함수 `onInitialized` 의 `isSuccess` 값을 true로 받은 뒤 객체를 생성해주어야 한다.
         * `isSuccess` 값이 false일 경우에 인스턴스를 가져올 경우 null 반환
-
-<br/>
-
-#### getAdEventInstance
-```java
-public static AdEvent getAdEventInstance(Activity activity)
-```
-* `AdEvent`의 전역 Singleton 객체를 생성한다.
-  * Revup 이니셜라이즈에 대한 콜백 리스너인 `RevupInitializeListener`의 콜백함수 `onInitialized` 의 `isSuccess` 값을 true로 받은 뒤 객체를 생성해주어야 한다.
-    * `isSuccess` 값이 false일 경우에 인스턴스를 가져올 경우 null 반환
 
 <br/>
 

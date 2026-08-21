@@ -272,9 +272,6 @@ RevupSdk.initialize(
 
         mRewardedInterstitialAd = RevupSdk.getRewardedInterstitialAdInstance(this)
         mRewardedInterstitialAd.setRewardedInterstitialAdListener(this)
-
-        mAdEvent = RevupSdk.getAdEventInstance(this)
-        mAdEvent.setAdEventListener(this)
    } else {
         Log.d(TAG, "RevupSdk initialize failed.")
    }
@@ -305,9 +302,6 @@ RevupSdk.initialize(
 
         mRewardedInterstitialAd = RevupSdk.getRewardedInterstitialAdInstance(this)
         mRewardedInterstitialAd.setRewardedInterstitialAdListener(this)
-
-        mAdEvent = RevupSdk.getAdEventInstance(this)
-        mAdEvent.setAdEventListener(this)
     } else {
         Log.d(TAG, "RevupSdk initialize failed.")
     }
