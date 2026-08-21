@@ -62,6 +62,77 @@ E/RevupEvent: scheme parameter missing: md_user_nm
 
 ---
 
+## 이벤트 화면 테마
+
+이벤트 화면을 라이트 / 다크 / 시스템 설정 중에서 고를 수 있습니다. (`1.0.6` 이상)
+
+**적용 범위는 네이티브 영역입니다.** 화면 배경, 상태바·내비게이션바 아이콘 대비,
+SDK 가 표시하는 안내 다이얼로그가 대상입니다.
+이벤트 웹 페이지 자체는 웹에서 정한 대로 표시됩니다.
+
+### LuckyEventTheme
+
+| 값 | 동작 |
+| --- | --- |
+| `LuckyEventTheme.LIGHT` | 단말 설정과 무관하게 항상 라이트 |
+| `LuckyEventTheme.DARK` | 단말 설정과 무관하게 항상 다크 |
+| `LuckyEventTheme.SYSTEM` | 단말의 다크모드 설정을 따름 (**기본값**) |
+
+> **`1.0.6` 부터 기본값이 `SYSTEM` 입니다.**
+> 별도 설정 없이 SDK 만 올리면, 다크모드로 설정된 단말에서 이벤트 화면이 다크로 표시됩니다.
+> 기존처럼 항상 라이트로 두려면 `LuckyEventTheme.LIGHT` 를 명시해 주세요.
+
+### Method
+
+- 이후에 열리는 모든 이벤트 화면의 테마를 설정합니다.
+- `void RevupLuckyEvent.setEventTheme(theme: LuckyEventTheme)`
+
+- 현재 설정된 테마를 반환합니다.
+- `LuckyEventTheme RevupLuckyEvent.getEventTheme()`
+
+- 이 빌더로 여는 화면에만 테마를 적용합니다. (전역 설정보다 우선)
+- `TnkEventBuilder TnkEventBuilder.setTheme(theme: LuckyEventTheme)`
+
+#### sample
+
+앱 전체에 적용하는 경우 `Application` 에서 한 번 설정합니다.
+
+```kotlin
+class SampleApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        RevupLuckyEvent.setEventTheme(LuckyEventTheme.SYSTEM)
+    }
+}
+```
+
+```java
+RevupLuckyEvent.setEventTheme(LuckyEventTheme.LIGHT);
+```
+
+화면마다 다르게 열어야 한다면 빌더에 지정합니다.
+
+```kotlin
+TnkEventActivity.TnkEventBuilder()
+    .setUserName("tnk_test")
+    .setEventIdTnkAppId("25120101", "00000000-0000-0000-0000-000000000000")
+    .setTheme(LuckyEventTheme.DARK)
+    .show(this@MainActivity)
+```
+
+> **화면을 열기 전에 호출해야 합니다.**
+> 이미 떠 있는 이벤트 화면에는 반영되지 않습니다.
+
+> **scheme 으로 진입하는 경우에도 전역 설정이 적용됩니다.**
+> 다만 앱 프로세스가 새로 뜬 직후에는 아직 설정 전일 수 있으므로,
+> scheme 진입을 사용하는 매체는 `Application` 에서 설정하는 것을 권장합니다.
+
+> `SYSTEM` 으로 설정한 상태에서 사용자가 단말의 다크모드를 전환해도
+> 화면이 다시 로드되지 않고 색상만 바뀝니다. 진행 중이던 이벤트가 유지됩니다.
+
+
+---
+
 ## 이벤트 화면 종료
 
 푸시 알림을 눌러 다른 화면으로 이동해야 하는 경우처럼, 매체가 이벤트 화면을 닫아야 할 때 사용합니다.
