@@ -1,6 +1,6 @@
 # Revup-Android-Sample
 [![GitHub package.json version](https://img.shields.io/badge/Android-1.0.5-blue)](../../releases)
-[![GitHub package.json version](https://img.shields.io/badge/iOS-1.1.1-blue)](https://github.com/revup/revup-iOS-Sample)
+[![GitHub package.json version](https://img.shields.io/badge/iOS-1.1.5-blue)](https://github.com/revup-tnk/REVUP-iOS-SDK)
 
 ## Requirements
 - minSdkVersion 23
@@ -243,7 +243,7 @@ admob 혹은 max 어댑터 연동 시 애드몹 appId 메타데이터를 추가�
 이니셜라이즈 함수는 크게 아래 두 가지로 지원하며, 용도에 따라 선택해서 사용할 수 있음
 * `RevupSdk.initialize(activity: Activity, mediaId: Int, mediaSecret: String, listener: RevupInitializeListener)`
 * `RevupSdk.initialize(activity: Activity, listener: RevupInitializeListener)`
-* [Other Initialize API](https://github.com/tnkfactory/REVUP-ANDROID-SDK/blob/master/docs/api_documentation.md#revupsdk)
+* [Other Initialize API](./docs/api_documentation.md#revupsdk)
 
 <br/>
 

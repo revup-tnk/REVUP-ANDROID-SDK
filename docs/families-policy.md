@@ -10,7 +10,7 @@
 ### 1단계 : 어드민 설정
 - Play Console에 등록된 앱 타켓팅 정보를 담당자에게 전달해야 합니다.
     - 타겟팅 정보는 앱 최초 등록 시 설정됩니다.
-    - 최초 등록 후 앱 타겟팅 정보가 변경된 경우 Revup 담당자에게 변경 요청을 해야합니다. [Revup_support](Revup_support@neowiz.com) 혹은 담당자에게 설정 여부를 확인해주세요.
+    - 최초 등록 후 앱 타겟팅 정보가 변경된 경우 Revup 담당자에게 변경 요청을 해야합니다. [Revup_support](mailto:Revup_support@neowiz.com) 혹은 담당자에게 설정 여부를 확인해주세요.
 
 <br/>
 

@@ -12,7 +12,7 @@
 |NETWORK_ERROR	|5	|"There is a network problem"	|Network read/write timed out 혹은 Network connection 오류	|Device의 network 연결 상태를 확인|
 |NO_FILL	|6	|"No more ads to show"	|하루에 볼 수 있는 Rewarded Video 광고의 횟수를 모두 소진 하였을 경우	|Revup admin page의 media (application)에 설정된 기준 시각이 지나면 광고 횟수가 다시 초기화 되므로 기준 시각 이후(next day)에 다시 시도|
 |TIME_LIMIT	|7	|"It was time-limited"	|Rewarded Video 광고를 한번 보여주고 난 후 일정 시간 (30초~60초, Revup admin page에서 설정된 시간 간격)이 지나기 전에 다시 Show를 시도할 경우	|Revup admin page에서 설정된 시간 간격 만큼 간격을 두고 다시 시도|
-|"NOT_EXIST_IDFA (Only iOS)"	|8	|iOS 디바이스에서 추출된 IDFA 값이 "00000000-0000-0000-0000-000000000000" 인 경우	|"Internal error"	|iOS 디바이스 설정에서 "광고 추적 제한" 설정이 ON 일 경우에 발생되며, 이 경우, SDK에서는 사용자가 "광고 추적 제한" 설정을 OFF 하도록 유도하는 안내 문구를 System Alert으로 띄운다. 사용자가 "광고 추적 제한" 설정을 OFF 후 게임을 재실행하면 광고 참여가 가능하다|
+|"NOT_EXIST_IDFA (Only iOS)"	|8	|"IDFA value is invalid"	|iOS 디바이스에서 추출된 IDFA 값이 "00000000-0000-0000-0000-000000000000" 인 경우	|iOS 디바이스 설정에서 "광고 추적 제한" 설정이 ON 일 경우에 발생되며, 이 경우, SDK에서는 사용자가 "광고 추적 제한" 설정을 OFF 하도록 유도하는 안내 문구를 System Alert으로 띄운다. 사용자가 "광고 추적 제한" 설정을 OFF 후 게임을 재실행하면 광고 참여가 가능하다|
 |GOOGLE_FAMILY_ERROR (Only Android)	|9	|"It is not available because of Google Family Policy"	|구글 가족정책에 의거, 사용할 수 없는 기능이 호출되었음을 의미	|구글 가족정책 가이드 참고|
 |INVALID_ADID (Only Android)	|10	|"ADID value is invalid"	|adid 가 없거나 유효하지 않음을 의미	|지속적으로 발생 시 Revup 개발팀에 문의|
 |TIME_OUT	|11	|"Time out"	|세팅한 기간 내에 Mediation 광고 네트워크의 로드 성공 콜백이 오지 않은 경우	|지속적으로 발생 시 Revup 개발팀에 문의|

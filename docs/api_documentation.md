@@ -66,11 +66,13 @@ public class RevupSdk {
 
     public static void setUserId(String userId)
 
+    public static boolean setUserIdChild(String userId, RevupUserType userType)
+
     public static void getUnitStatus(String unitId, IUnitStatus callback)
 
     public static String getSDKVersion()
 
-    public static String getNetworksVersion()
+    public static String getNetworksVersions()
 
     public static RewardedVideoAd getRewardedVideoAdInstance(Activity activity)
 
@@ -349,7 +351,7 @@ public class RevupError {
 }
 ```
 
-[Revup 에러 정보 문서 확인](https://github.com/revup/Revup-Android-Sample/blob/master/docs/error_info.md)
+[Revup 에러 정보 문서 확인](./error_info.md)
 
 <br/>
 
@@ -363,6 +365,8 @@ public interface InterstitialAd {
     boolean isLoaded(String unitId)
 
     boolean show()
+
+    boolean show(Activity activity)
 
     void setInterstitialAdListener(InterstitialAdListener interstitialAdListener)
 }
@@ -446,6 +450,8 @@ public interface RewardedVideoAd {
     boolean isLoaded(String unitId)
 
     boolean show()
+
+    boolean show(Activity activity)
 
     void setRewardedVideoAdListener(RewardedVideoAdListener rewardedVideoAdListener)
 }
