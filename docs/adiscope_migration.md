@@ -25,7 +25,7 @@
 
 ```groovy
 dependencies {
-    Dependency revupBom = platform("com.tnkfactory.revup:revup-bom:1.0.6")
+    Dependency revupBom = platform("com.tnkfactory.revup:revup-bom:1.0.7")
     implementation revupBom
 
     implementation "com.tnkfactory.revup:revupCore"
@@ -33,7 +33,7 @@ dependencies {
 
     // [optional] adiscope 호환 계층
     // BOM 관리 대상이 아니므로 버전을 직접 적어야 하며, BOM 버전과 같은 값을 사용합니다.
-    implementation "com.tnkfactory.revup:revup_shim:1.0.6"
+    implementation "com.tnkfactory.revup:revup_shim:1.0.7"
 }
 ```
 

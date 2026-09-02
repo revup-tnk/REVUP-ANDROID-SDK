@@ -12,7 +12,7 @@
 
 ### 이벤트 모듈 참조 추가
 ```groovy
-implementation "com.tnkfactory.revup:revupLuckyEvent:1.0.6"
+implementation "com.tnkfactory.revup:revupLuckyEvent:1.0.7"
 ```
 
 
@@ -66,6 +66,8 @@ E/RevupEvent: scheme parameter missing: md_user_nm
 
 이벤트 화면을 라이트 / 다크 / 시스템 설정 중에서 고를 수 있습니다. (`1.0.6` 이상)
 
+<span style="color:red">`1.0.7` 에서 기본값이 바뀌었습니다.</span> 아래 표를 확인해 주세요.
+
 **적용 범위는 네이티브 영역입니다.** 화면 배경, 상태바·내비게이션바 아이콘 대비,
 SDK 가 표시하는 안내 다이얼로그가 대상입니다.
 이벤트 웹 페이지 자체는 웹에서 정한 대로 표시됩니다.
@@ -76,11 +78,21 @@ SDK 가 표시하는 안내 다이얼로그가 대상입니다.
 | --- | --- |
 | `LuckyEventTheme.LIGHT` | 단말 설정과 무관하게 항상 라이트 |
 | `LuckyEventTheme.DARK` | 단말 설정과 무관하게 항상 다크 |
-| `LuckyEventTheme.SYSTEM` | 단말의 다크모드 설정을 따름 (**기본값**) |
+| `LuckyEventTheme.SYSTEM` | 단말의 다크모드 설정을 따름 |
+| `LuckyEventTheme.UNSPECIFIED` | SDK 가 테마에 관여하지 않음 (`1.0.7` 이상 · **기본값**) |
 
-> **`1.0.6` 부터 기본값이 `SYSTEM` 입니다.**
-> 별도 설정 없이 SDK 만 올리면, 다크모드로 설정된 단말에서 이벤트 화면이 다크로 표시됩니다.
-> 기존처럼 항상 라이트로 두려면 `LuckyEventTheme.LIGHT` 를 명시해 주세요.
+> **`1.0.7` 부터 기본값이 `UNSPECIFIED` 입니다.**
+> 지정하지 않으면 SDK 는 화면 배경도, 시스템 바 스타일도, AppCompat 의 night mode 도
+> 건드리지 않습니다. 매체 앱이 정해 둔 테마가 그대로 유지됩니다.
+>
+> 이벤트 화면이 단말 다크모드를 따르길 원하시면 `setEventTheme(LuckyEventTheme.SYSTEM)` 을
+> **명시해 주세요.** `SYSTEM` 도 night mode 에 값을 쓰는 동작이라 기본값이 될 수 없습니다.
+
+> ⚠️ **`1.0.6` 을 쓰고 계셨다면 확인이 필요합니다.**
+> `1.0.6` 은 기본값이 `SYSTEM` 이라, 테마를 설정하지 않아도 SDK 가 night mode 에 값을
+> 썼습니다. 그 설정이 **이벤트 화면을 벗어난 뒤에도 앱에 남아** 매체 앱 테마가 바뀌는
+> 문제가 있었습니다. `1.0.7` 로 올리시면 해결됩니다.
+> 다크모드 동작을 유지하시려면 위처럼 `SYSTEM` 을 명시해 주세요.
 
 ### Method
 
@@ -258,3 +270,93 @@ RevupLuckyEvent.setEventListener(new RevupLuckyEventListener() {
 
 > 이 콜백은 **이벤트 화면 안에서 노출되는 광고**만 대상으로 합니다.
 > 매체가 별도 지면에서 직접 호출하는 리워드 영상·전면광고는 각 광고의 리스너를 사용하세요.
+
+<br/>
+
+## 광고 재생 차단 (`1.0.7` 이상)
+
+앱 상태에 따라 **복권 화면 안의 광고 재생을 매체가 막을 수 있습니다.**
+음악·통화처럼 소리가 겹치면 안 되는 상황을 위한 기능입니다.
+
+설정하지 않으면 지금까지와 동일하게 항상 재생됩니다.
+
+### 동작
+
+```
+카드 클릭 → 이벤트 페이지가 SDK 에 물어봄 → 매체 판단
+                                              ├─ 재생 가능 → 광고 재생
+                                              └─ 재생 불가 → 페이지가 진행을 멈추고 안내 표시
+```
+
+**차단 시 광고를 요청하지 않고 화면도 넘어가지 않습니다.** 카드는 그대로 남습니다.
+
+### 방법 1 — Application 이 구현
+
+```java
+public class MyApplication extends Application implements ICanPlayRv {
+    @Override
+    public LuckyEventCanPlayAdInfo isLuckyEventCanPlayAd() {
+        boolean playing = myPlayer.isPlaying();
+        // 두 번째 인자는 재생 불가 사유 문구입니다. 비워 두면 페이지 기본 문구가 쓰입니다
+        return new LuckyEventCanPlayAdInfo(!playing, "음악 재생 중에는 광고를 볼 수 없어요");
+    }
+}
+```
+
+### 방법 2 — 람다로 등록
+
+광고를 별도 모듈로 분리해 `Application` 에서 SDK 타입을 볼 수 없는 경우에 씁니다.
+
+```kotlin
+// Application.onCreate() 에서 등록하세요
+RevupLuckyEvent.setCanPlayRv {
+    LuckyEventCanPlayAdInfo(!myPlayer.isPlaying, "음악 재생 중에는 광고를 볼 수 없어요")
+}
+```
+
+<span style="color:red">등록은 반드시 `Application.onCreate()` 에서 하세요.</span>
+복권 화면은 스킴으로도 열립니다. `Activity` 에서 등록하면, 프로세스가 죽었다 살아나는
+경로에서 그 `Activity` 가 만들어지지 않아 등록이 비어 있을 수 있습니다.
+
+### 호출 규약
+
+| 항목 | 내용 |
+| --- | --- |
+| 시점 | 광고를 띄우기 직전 (미리 로드할 때는 묻지 않습니다) |
+| 스레드 | 항상 메인 스레드 |
+| 반환 | **즉시 반환해야 합니다** |
+
+<span style="color:red">네트워크 호출이나 락 대기를 하면 ANR 로 이어집니다.</span>
+로컬 상태 조회만 해주세요. 예외를 던지면 차단으로 처리합니다.
+
+판정은 **재생 시작 시점 1회**입니다. 광고가 시작된 뒤 음악을 켜도 중간에 끊지 않습니다.
+재생 중인 광고를 끊으면 리워드 지급 판정이 꼬이기 때문입니다.
+
+### 안내 문구
+
+문구를 화면에 표시하는 것은 **이벤트 웹 페이지**입니다. SDK 는 매체가 정한 문구를 전달만 합니다.
+
+| 순위 | 값 |
+| --- | --- |
+| 1 | 판단할 때마다 실어 보낸 `LuckyEventCanPlayAdInfo` 의 문구 |
+| 2 | `setCannotPlayRvMessage()` 로 설정해 둔 문구 |
+| 3 | 둘 다 없으면 **페이지 기본 문구** |
+
+```java
+// 앱 단위로 한 번만 설정하면 됩니다. 앱을 다시 켜도 유지됩니다
+RevupLuckyEvent.setCannotPlayRvMessage(context, "음악 재생 중에는 광고를 볼 수 없어요");
+
+// 설정하지 않았으면 빈 문자열을 반환합니다 (null 아님)
+RevupLuckyEvent.getCannotPlayRvMessage(context);
+```
+
+### Method
+
+- 재생 가능 여부를 판단할 콜백을 등록합니다. `null` 을 넣으면 해제됩니다.
+- `void RevupLuckyEvent.setCanPlayRv(ICanPlayRv callback)`
+
+- 재생 불가 안내 문구를 설정합니다. `null` 이나 공백이면 설정이 지워집니다.
+- `void RevupLuckyEvent.setCannotPlayRvMessage(Context context, String message)`
+
+- 설정된 문구를 반환합니다. 미설정이면 `""` 입니다.
+- `String RevupLuckyEvent.getCannotPlayRvMessage(Context context)`
