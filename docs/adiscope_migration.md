@@ -49,7 +49,8 @@
 
 ## 1. 저장소 추가
 
-Revup 아티팩트는 **Maven Central 에 없습니다.** 아래 저장소를 추가해야 합니다.
+Revup 아티팩트는 **Maven Central 에 없습니다.** 아래 저장소 하나만 추가하면 됩니다.
+미러링과 그룹 설정이 되어 있어 네트워크 어댑터가 쓰는 SDK 도 이 경로로 함께 해석됩니다.
 
 **settings.gradle**
 
@@ -60,25 +61,7 @@ dependencyResolutionManagement {
         mavenCentral()
 
         // [required] revup library
-        maven { url "https://repository.tnkad.net:8443/repository/android/" }
-
-        // [optional] revup network library
-        // pangle 혹은 max 연동 시 추가
-        maven { url "https://artifact.bytedance.com/repository/pangle" }
-
-        // chartboost 혹은 max 연동 시 추가
-        maven { url "https://cboost.jfrog.io/artifactory/chartboost-ads/" }
-
-        // max 연동 시 아래 url 모두 추가
-        maven { url "https://artifactory.bidmachine.io/bidmachine" }
-        maven { url "https://maven.ogury.co" }
-        maven { url "https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_oversea" }
-        maven { url "https://android-sdk.is.com" }
-        maven { url "https://repo.pubmatic.com/artifactory/public-repos" }
-        maven { url "https://verve.jfrog.io/artifactory/verve-gradle-release" }
-
-        // tnkpub 연동 시 추가
-        maven { url "https://repository.tnkad.net:8443/repository/public/" }
+        maven { url "https://repository.tnkad.net/repository/public/" }
     }
 }
 ```
@@ -86,8 +69,11 @@ dependencyResolutionManagement {
 `settings.gradle` 에 `dependencyResolutionManagement` 가 없다면 최상위 `build.gradle` 의
 `repositories` 에 동일하게 추가하세요.
 
-기존 Adiscope 저장소(`https://repository.adiscope.com/...`)는 제거합니다.
-네트워크 어댑터 저장소는 쓰던 것을 그대로 두면 됩니다.
+`google()` 과 `mavenCentral()` 은 미러링 대상이 아니므로 그대로 두어야 합니다.
+
+기존 Adiscope 저장소(`https://repository.adiscope.com/...`)와, 네트워크별로 추가해 두었던
+저장소(bytedance · chartboost · bidmachine · ogury · mintegral · ironsource · pubmatic · verve 등)는
+모두 제거할 수 있습니다.
 
 <br/>
 
