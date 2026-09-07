@@ -1,5 +1,5 @@
 # Revup-Android-Sample
-[![GitHub package.json version](https://img.shields.io/badge/Android-1.0.5-blue)](../../releases)
+[![GitHub package.json version](https://img.shields.io/badge/Android-1.0.7-blue)](../../releases)
 [![GitHub package.json version](https://img.shields.io/badge/iOS-1.1.5-blue)](https://github.com/revup-tnk/REVUP-iOS-SDK)
 
 ## Requirements
