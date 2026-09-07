@@ -73,36 +73,25 @@
 
 운영에 필요한 각각의 네트워크 어댑터 의존성을 추가
 
+저장소는 아래 하나만 추가하면 된다. 미러링과 그룹 설정이 되어 있어 네트워크 어댑터가 쓰는
+SDK 도 이 경로로 함께 해석된다. `google()` 과 `mavenCentral()` 은 미러링 대상이 아니므로 그대로 둔다.
+
 **build.gradle(root)**
 ```groovy
 repositories {
     google()
     mavenCentral()
-  
+
     // [required] revup library
     maven {
-        url "https://repository.tnkad.net:8443/repository/android/"
+        url "https://repository.tnkad.net/repository/public/"
     }
-
-    // [optional] revup network library
-    // pangle 혹은 max 연동 시 추가
-    maven { url "https://artifact.bytedance.com/repository/pangle" }
-  
-    // chartboost 혹은 max 연동 시 추가
-    maven { url "https://cboost.jfrog.io/artifactory/chartboost-ads/" }
-
-    // max 연동 시 아래 url 모두 추가
-    maven { url "https://artifactory.bidmachine.io/bidmachine" }
-    maven { url "https://maven.ogury.co" }
-    maven { url "https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_oversea" }
-    maven { url "https://android-sdk.is.com" }
-    maven { url "https://repo.pubmatic.com/artifactory/public-repos" }
-    maven { url "https://verve.jfrog.io/artifactory/verve-gradle-release" }
-
-    // tnkpub 연동 시 추가
-    maven { url "https://repository.tnkad.net:8443/repository/public/" }
 }
 ```
+
+네트워크별로 저장소를 따로 잡을 필요가 없다. bytedance · chartboost · bidmachine · ogury ·
+mintegral · ironsource · pubmatic · verve 등을 나열해 두었다면 모두 제거해도 된다.
+
 <br/>  
 
 **build.gradle(app)**  
