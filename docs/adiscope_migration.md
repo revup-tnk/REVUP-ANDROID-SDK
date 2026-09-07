@@ -2,6 +2,9 @@
 
 기존 Adiscope SDK 로 연동된 앱을 **호출부를 고치지 않고** Revup 으로 교체하기 위한 호환 모듈입니다.
 
+이 문서 하나로 교체가 끝나도록 필요한 설정을 모두 담았습니다. 신규 연동이라면 대신
+[README](../README.md) 를 보세요.
+
 <br/>
 
 ## 필요한 경우
@@ -19,7 +22,108 @@
 
 <br/>
 
-## 연동
+## 요구사항
+
+* `minSdkVersion` 23
+* `compileSdkVersion` 36
+
+어댑터별 minSdk 와 네트워크 SDK 버전은 [README 의 Requirements](../README.md#requirements) 를 참고하세요.
+
+> ⚠️ 애드몹 SDK(`com.google.android.gms:play-services-ads`)를 이미 포함하고 있다면 버전 호환에 유의하세요.
+> admob · max 어댑터 사용 시 gms 25 버전으로 마이그레이션이 필요합니다.
+
+<br/>
+
+## 순서
+
+아래 순서를 지켜 주세요. 특히 2번을 건너뛰면 빌드가 깨집니다.
+
+| | 작업 | 건너뛰면 |
+|---|---|---|
+| 1 | [저장소 추가](#1-저장소-추가) | 의존성 해석 실패 |
+| 2 | [기존 Adiscope 의존성 제거](#2-기존-adiscope-의존성-제거) | **Duplicate class 빌드 실패** |
+| 3 | [Revup 의존성 추가](#3-revup-의존성-추가) | — |
+| 4 | [매체 설정값 확인](#4-매체-설정값) | 초기화 실패 |
+
+<br/>
+
+## 1. 저장소 추가
+
+Revup 아티팩트는 **Maven Central 에 없습니다.** 아래 저장소를 추가해야 합니다.
+
+**settings.gradle**
+
+```groovy
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+
+        // [required] revup library
+        maven { url "https://repository.tnkad.net:8443/repository/android/" }
+
+        // [optional] revup network library
+        // pangle 혹은 max 연동 시 추가
+        maven { url "https://artifact.bytedance.com/repository/pangle" }
+
+        // chartboost 혹은 max 연동 시 추가
+        maven { url "https://cboost.jfrog.io/artifactory/chartboost-ads/" }
+
+        // max 연동 시 아래 url 모두 추가
+        maven { url "https://artifactory.bidmachine.io/bidmachine" }
+        maven { url "https://maven.ogury.co" }
+        maven { url "https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_oversea" }
+        maven { url "https://android-sdk.is.com" }
+        maven { url "https://repo.pubmatic.com/artifactory/public-repos" }
+        maven { url "https://verve.jfrog.io/artifactory/verve-gradle-release" }
+
+        // tnkpub 연동 시 추가
+        maven { url "https://repository.tnkad.net:8443/repository/public/" }
+    }
+}
+```
+
+`settings.gradle` 에 `dependencyResolutionManagement` 가 없다면 최상위 `build.gradle` 의
+`repositories` 에 동일하게 추가하세요.
+
+기존 Adiscope 저장소(`https://repository.adiscope.com/...`)는 제거합니다.
+네트워크 어댑터 저장소는 쓰던 것을 그대로 두면 됩니다.
+
+<br/>
+
+## 2. 기존 Adiscope 의존성 제거
+
+<span style="color:red">**`com.nps.adiscope` 그룹 의존성을 모두 제거해야 합니다.**</span>
+
+`revup_shim` 은 옛 클래스 이름(`com.nps.adiscope.AdiscopeSdk` 등)을 그대로 재현합니다.
+기존 `adiscopeCore` 가 남아 있으면 같은 FQCN 이 두 모듈에서 나와 빌드가 깨집니다.
+
+```
+Duplicate class com.nps.adiscope.AdiscopeSdk found in modules
+  adiscopeCore-5.4.3.aar and revup_shim-1.0.7.aar
+```
+
+**제거 대상** — BOM, 코어, 어댑터 전부입니다.
+
+```groovy
+dependencies {
+    // ↓ 아래를 전부 삭제
+    implementation platform("com.nps.adiscope:adiscope-bom:5.4.3")
+    implementation "com.nps.adiscope:adiscopeCore"
+    implementation "com.nps.adiscope:adiscopeAndroid"
+    implementation "com.nps.adiscope:adiscopeWalnut"
+    implementation "com.nps.adiscope:adapter.admob"
+    implementation "com.nps.adiscope:adapter.max"
+    // ... 그밖의 com.nps.adiscope 의존성 전부
+}
+```
+
+지워도 컴파일은 그대로 통과합니다. 옛 클래스는 `revup_shim` 이 대신 제공하기 때문입니다.
+**호출부를 고치지 않는다는 것은 앱 코드 이야기이고, 의존성은 교체 대상입니다.**
+
+<br/>
+
+## 3. Revup 의존성 추가
 
 **build.gradle(app)**
 
@@ -28,12 +132,22 @@ dependencies {
     Dependency revupBom = platform("com.tnkfactory.revup:revup-bom:1.0.7")
     implementation revupBom
 
+    // [required] revup core library
     implementation "com.tnkfactory.revup:revupCore"
     implementation "com.tnkfactory.revup:revupAndroid"
 
     // [optional] adiscope 호환 계층
     // BOM 관리 대상이 아니므로 버전을 직접 적어야 하며, BOM 버전과 같은 값을 사용합니다.
     implementation "com.tnkfactory.revup:revup_shim:1.0.7"
+
+    // [optional] revup network adapter library
+    // 쓰던 어댑터를 그대로 옮깁니다. 아티팩트명은 같고 group 만 다릅니다.
+    implementation "com.tnkfactory.revup:adapter.admob"
+    implementation "com.tnkfactory.revup:adapter.max"
+    implementation "com.tnkfactory.revup:adapter.chartboost"
+    implementation "com.tnkfactory.revup:adapter.pangle"
+    implementation "com.tnkfactory.revup:adapter.vungle"
+    implementation "com.tnkfactory.revup:adapter.tnkpub"
 }
 ```
 
@@ -45,6 +159,78 @@ dependencies {
 
 > SDK 를 사내 라이브러리 모듈로 한 번 감싸서 배포하는 구조라면, 그 모듈에서는
 > `implementation` 이 아니라 `api` 로 선언해야 앱 쪽에서 옛 클래스가 보입니다.
+
+<br/>
+
+### 어댑터 대응표
+
+group 만 바뀌고 아티팩트명은 같습니다. 버전은 BOM 이 관리하므로 적지 않습니다.
+
+| 기존 | 교체 후 | BOM 1.0.7 기준 버전 |
+| --- | --- | --- |
+| `com.nps.adiscope:adapter.admob` | `com.tnkfactory.revup:adapter.admob` | 25.2.0.6 |
+| `com.nps.adiscope:adapter.max` | `com.tnkfactory.revup:adapter.max` | 13.6.2.7 |
+| `com.nps.adiscope:adapter.chartboost` | `com.tnkfactory.revup:adapter.chartboost` | 9.11.0.6 |
+| `com.nps.adiscope:adapter.pangle` | `com.tnkfactory.revup:adapter.pangle` | 7.9.1.3.7 |
+| `com.nps.adiscope:adapter.vungle` | `com.tnkfactory.revup:adapter.vungle` | 7.7.3.6 |
+| `com.nps.adiscope:adapter.tnkpub` | `com.tnkfactory.revup:adapter.tnkpub` | 7.25.11.6 |
+
+어댑터를 빠뜨리면 초기화는 성공하지만 광고가 채워지지 않습니다. 빌드도 통과하고 에러도 없으므로
+교체 전후의 어댑터 목록을 반드시 대조해 주세요.
+
+어댑터 버전이 코어와 어긋나면 이니셜라이즈 시점에 에러 레벨 로그로 알려줍니다.
+
+<br/>
+
+### Kotlin DSL 로 쓰는 경우
+
+```kotlin
+dependencies {
+    implementation(platform("com.tnkfactory.revup:revup-bom:1.0.7"))
+
+    implementation("com.tnkfactory.revup:revupCore")
+    implementation("com.tnkfactory.revup:revupAndroid")
+    implementation("com.tnkfactory.revup:revup_shim:1.0.7")
+
+    implementation("com.tnkfactory.revup:adapter.admob")
+    // ... 그밖의 어댑터
+}
+```
+
+<br/>
+
+## 4. 매체 설정값
+
+**meta-data 이름과 값을 그대로 두면 됩니다.** Revup 은 `revup_*` 를 먼저 찾고, 없으면
+`adiscope_*` 로 폴백합니다. 기존 매니페스트와 `manifestPlaceholders` 를 고칠 필요가 없습니다.
+
+| 1순위 | 폴백 | 용도 |
+| --- | --- | --- |
+| `revup_media_id` | `adiscope_media_id` | 매체 아이디 |
+| `revup_media_secret` | `adiscope_media_secret` | 매체 시크릿키 |
+| `revup_sub_domain` | `adiscope_sub_domain` | 서브 도메인 (옵션) |
+
+`AdiscopeSdk.initialize(activity, listener)` 오버로드는 이 meta-data 를 읽어 초기화합니다.
+mediaId · mediaSecret 을 인자로 넘기는 오버로드를 쓰고 있었다면 그쪽도 그대로 동작합니다.
+
+**AndroidManifest.xml** — 기존 그대로
+
+```xml
+<application>
+    <meta-data android:name="adiscope_media_id" android:value="${adiscope_media_id}"/>
+    <meta-data android:name="adiscope_media_secret" android:value="${adiscope_media_secret}"/>
+
+    <!-- admob · max 어댑터 연동 시 필수. 값 미기입 시 앱 크래시 발생 -->
+    <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID"
+               android:value="INPUT_YOUR_ADMOB_APP_ID"/>
+</application>
+```
+
+`${...}` 치환을 쓰고 있다면 `manifestPlaceholders` 정의도 그대로 두세요. 정의가 빠지면
+매니페스트 머지 단계에서 빌드가 깨집니다.
+
+> <span style="color:red">**매체 아이디와 시크릿키 값 자체는 레브업 측에 확인해 주세요.**</span>
+> 기존 Adiscope 매체 값을 그대로 쓸 수 있는지, 재발급이 필요한지는 매체마다 다릅니다.
 
 <br/>
 
@@ -69,18 +255,11 @@ dependencies {
 
 <br/>
 
-## 제공하지 않는 것 — 오퍼월
+### 대응이 없는 것
 
-<span style="color:red">Revup 에는 오퍼월 API 가 없습니다.</span>
-
-```java
-AdiscopeSdk.getOfferwallAdInstance(activity);   // UnsupportedOperationException
-```
-
-`OfferwallAd` 인터페이스는 **컴파일이 깨지지 않도록 형태만 유지**되어 있고,
-인스턴스를 얻는 시점에 예외를 던집니다. 즉 빌드는 통과하고 실행 중에 실패합니다.
-
-오퍼월을 사용 중이었다면 교체 전에 담당자와 협의해 주세요.
+| 옛 API | 상태 |
+| --- | --- |
+| `com.nps.adiscope:adiscopeWalnut` | 대응 모듈 없음. 사용 중이었다면 담당자와 협의해 주세요 |
 
 <br/>
 
@@ -93,6 +272,17 @@ AdiscopeSdk.getOfferwallAdInstance(activity);   // UnsupportedOperationException
 -keep class com.adiscope.** { *; }
 -keep class com.nps.adiscope.** { *; }
 ```
+
+기존 `proguard-rules.pro` 에 적어 둔 Adiscope keep 규칙은 남겨 두어도 무방합니다.
+
+<br/>
+
+## 교체 후 확인
+
+* 의존성 트리에 `com.nps.adiscope` 가 남아 있지 않은지 (`./gradlew :app:dependencies`)
+* 교체 전후 어댑터 목록이 같은지
+* 초기화 콜백이 `isSuccess = true` 로 끝까지 실행되는지
+* 광고 포맷별 `load` → `isLoaded` → `show` 가 정상 동작하는지
 
 <br/>
 
@@ -107,10 +297,13 @@ IDE 경고를 따라 호출부를 Revup API 로 옮길 수 있습니다.
 
 3번을 먼저 하면 앞서 설명한 `NoClassDefFoundError` 가 재현됩니다. **순서를 지켜 주세요.**
 
+Revup API 사용법은 [README 의 Integration Guide](../README.md#integration-guide) 를 참고하세요.
+
 <br/>
 
 ## 참고
 
+* [SDK 연동 가이드 (README)](../README.md)
 * [API Documentation](./api_documentation.md)
 * [Error Information](./error_info.md)
 * [Third Party Event](./event_guide.md)
