@@ -97,7 +97,7 @@ dependencies {
     implementation platform("com.nps.adiscope:adiscope-bom:5.4.3")
     implementation "com.nps.adiscope:adiscopeCore"
     implementation "com.nps.adiscope:adiscopeAndroid"
-    implementation "com.nps.adiscope:adiscopeWalnut"
+    implementation "com.nps.adiscope:adiscopeWalnut"   // 대응 모듈 없음. 그냥 삭제
     implementation "com.nps.adiscope:adapter.admob"
     implementation "com.nps.adiscope:adapter.max"
     // ... 그밖의 com.nps.adiscope 의존성 전부
@@ -243,9 +243,15 @@ mediaId · mediaSecret 을 인자로 넘기는 오버로드를 쓰고 있었다�
 
 ### 대응이 없는 것
 
-| 옛 API | 상태 |
+| 옛 모듈 | 조치 |
 | --- | --- |
-| `com.nps.adiscope:adiscopeWalnut` | 대응 모듈 없음. 사용 중이었다면 담당자와 협의해 주세요 |
+| `com.nps.adiscope:adiscopeWalnut` | **의존성에서 삭제하세요.** Revup 에 대응 모듈이 없습니다 |
+
+`adiscopeWalnut` 은 동영상 간편 연동 모듈입니다. 옛 가이드 예제를 그대로 복사하면서 의존성에만
+남아 있고 실제로는 호출하지 않는 경우가 대부분이라, **지워도 앱 동작에 영향이 없습니다.**
+
+호출부가 정말 있다면 `revup_shim` 이 제공하는 리워드 동영상 API 로 대체하면 됩니다.
+그 밖의 이유로 이 모듈이 필요하다고 판단되면 담당자에게 문의해 주세요.
 
 <br/>
 
