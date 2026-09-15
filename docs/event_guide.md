@@ -271,6 +271,139 @@ RevupLuckyEvent.setEventListener(new RevupLuckyEventListener() {
 > 이 콜백은 **이벤트 화면 안에서 노출되는 광고**만 대상으로 합니다.
 > 매체가 별도 지면에서 직접 호출하는 리워드 영상·전면광고는 각 광고의 리스너를 사용하세요.
 
+
+---
+
+## 웹뷰 스킴 URL 전달받기
+
+이벤트 웹 페이지가 호출한 `tnkscheme://` URL 을 매체 앱이 전달받아 직접 처리할 수 있습니다.
+이벤트 참여·적립 시점을 분석 도구로 보내는 등, 웹 페이지의 동작을 앱에서 이어받을 때 사용합니다.
+
+> iOS 의 `luckyEventWebViewNavigated(_:vc:)` 에 대응하는 기능입니다.
+> 다만 **동작 방식이 다르므로** 아래 [iOS 와의 차이](#ios-와의-차이) 를 확인해 주세요.
+
+### 동작
+
+```
+이벤트 웹 페이지 (location.href = "tnkscheme://...")
+  → SDK 가 후커 클래스의 adEventWebViewNavigated(activity, url) 호출
+      ├─ true  반환 → 매체가 처리한 것으로 보고 SDK 는 아무것도 하지 않음
+      └─ false 반환 → SDK 기본 처리 진행
+```
+
+후커는 **SDK 기본 처리보다 먼저, 메인 스레드에서** 호출됩니다.
+
+### 1. 후커 클래스 작성
+
+```kotlin
+class LuckyEventSchemeHooker {
+    fun adEventWebViewNavigated(ac: FragmentActivity, url: String): Boolean {
+        if (!url.startsWith("tnkscheme:")) return false
+
+        // SDK 기본 처리 항목은 SDK 에 맡깁니다
+        if (url.contains("history_back") || url.contains("close_view") || url.contains("open_new_window")) {
+            return false
+        }
+
+        // 매체 앱에서 처리
+        val uri = Uri.parse(url)
+        Log.d(TAG, "lucky event scheme: host=${uri.host}, url=$url")
+        return true
+    }
+}
+```
+
+```java
+public class LuckyEventSchemeHooker {
+    public boolean adEventWebViewNavigated(FragmentActivity ac, String url) {
+        if (!url.startsWith("tnkscheme:")) return false;
+
+        // SDK 기본 처리 항목은 SDK 에 맡깁니다
+        if (url.contains("history_back") || url.contains("close_view") || url.contains("open_new_window")) {
+            return false;
+        }
+
+        // 매체 앱에서 처리
+        Uri uri = Uri.parse(url);
+        Log.d(TAG, "lucky event scheme: host=" + uri.getHost() + ", url=" + url);
+        return true;
+    }
+}
+```
+
+| 항목 | 규칙 |
+| --- | --- |
+| 메서드 이름 | 정확히 `adEventWebViewNavigated` |
+| 파라미터 | `(FragmentActivity, String)` — 순서와 타입 모두 일치 |
+| 반환형 | `Boolean` (Java 는 `boolean`) |
+| 생성자 | 인자 없는 생성자 |
+
+<span style="color:red">SDK 는 이 메서드를 이름으로 찾아 호출합니다.</span>
+이름이나 시그니처가 조금이라도 다르면 **오류 없이 호출되지 않습니다.**
+
+> 호출될 때마다 **새 인스턴스를 생성**합니다.
+> 호출 사이에 유지할 상태가 있다면 `companion object`(Java 는 `static`)에 보관하세요.
+
+### 2. 후커 클래스 등록
+
+#### Method
+
+- 스킴 URL 을 전달받을 후커 클래스를 등록합니다.
+- `TnkEventBuilder TnkEventBuilder.setHookerClass(ac: Activity, iClass: Class<*>)`
+
+#### sample
+
+```kotlin
+TnkEventActivity.TnkEventBuilder()
+    .setUserName("tnk_test")
+    .setEventIdTnkAppId("25120101", "00000000-0000-0000-0000-000000000000")
+    .setHookerClass(this@MainActivity, LuckyEventSchemeHooker::class.java)
+    .show(this@MainActivity)
+```
+
+> **등록은 앱에 저장되어 유지됩니다.**
+> 한 번 등록하면 앱을 다시 켜도, `setHookerClass` 없이 여는 화면이나 scheme 으로 진입한 화면에도 적용됩니다.
+> 해제하는 API 는 없으므로, 처리하지 않을 URL 은 `false` 를 반환해 주세요.
+
+> **scheme 진입만 사용하는 매체**는 앱 첫 화면 등에서 빌더로 `setHookerClass` 만 호출해 두세요. (`show` 는 호출하지 않아도 됩니다)
+> 앱 설치 후 한 번도 등록하지 않은 상태에서는 URL 이 전달되지 않습니다.
+
+### 3. release 빌드 ProGuard 규칙 추가
+
+```
+-keep class com.your.package.LuckyEventSchemeHooker {
+    public <init>();
+    public boolean adEventWebViewNavigated(androidx.fragment.app.FragmentActivity, java.lang.String);
+}
+```
+
+<span style="color:red">이 규칙이 없으면 release 빌드에서만 동작하지 않습니다.</span>
+앱 코드에서 직접 호출하지 않는 메서드라 R8 이 제거하거나 이름을 바꿉니다.
+디버그 빌드에서 확인했더라도 **난독화된 release 빌드로 반드시 다시 확인**해 주세요.
+
+### SDK 기본 처리 항목
+
+후커가 `false` 를 반환하면 SDK 가 아래와 같이 처리합니다.
+
+| URL | SDK 동작 |
+| --- | --- |
+| `tnkscheme://history_back` | 이전 페이지로 이동. 이전 페이지가 없으면 화면 닫기 |
+| `tnkscheme://close_view` | 이벤트 화면 닫기 |
+| `tnkscheme://open_new_window?url=...` | `url` 을 외부 브라우저·앱으로 열기 |
+| `market:` · `intent:` | 스토어 또는 해당 앱 실행 |
+
+<span style="color:red">위 항목에 `true` 를 반환하면 뒤로가기·닫기·외부 링크가 동작하지 않습니다.</span>
+
+### iOS 와의 차이
+
+| 항목 | Android | iOS |
+| --- | --- | --- |
+| 전달 범위 | 웹뷰가 이동하는 URL 대부분 (`http`·`https` 포함) | SDK 기본 처리 항목을 제외한 `tnkscheme://` URL 만 |
+| 처리 여부 | 반환값으로 매체가 결정 | 전달만 받음 |
+| 등록 | `setHookerClass` (앱에 저장되어 유지) | `REVUPDelegate` 구현 |
+
+**1번 샘플처럼 걸러내면 두 플랫폼이 같은 URL 을 받습니다.**
+
 <br/>
 
 ## 광고 재생 차단 (`1.0.7` 이상)
