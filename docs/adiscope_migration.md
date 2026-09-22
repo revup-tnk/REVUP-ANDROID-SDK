@@ -1,6 +1,7 @@
 # Adiscope → Revup 마이그레이션 (revup_shim)
 
 기존 Adiscope SDK 로 연동된 앱을 **호출부를 고치지 않고** Revup 으로 교체하기 위한 호환 모듈입니다.
+(Kotlin 으로 작성된 호출부는 1.0.7 에서 일부 수정이 필요합니다 — [Kotlin 에서 호출하는 경우](#kotlin-에서-호출하는-경우) 참고)
 
 이 문서 하나로 교체가 끝나도록 필요한 설정을 모두 담았습니다. 신규 연동이라면 대신
 [README](../README.md) 를 보세요.
@@ -223,7 +224,7 @@ mediaId · mediaSecret 을 인자로 넘기는 오버로드를 쓰고 있었다�
 ## 제공하는 API
 
 옛 클래스 이름과 시그니처를 그대로 유지하고, 내부에서 Revup 구현으로 위임합니다.
-**앱 코드를 고칠 필요가 없습니다.**
+**앱 코드를 고칠 필요가 없습니다.** (Kotlin 호출부는 [아래](#kotlin-에서-호출하는-경우) 참고)
 
 | 옛 API | 위임 대상 |
 | --- | --- |
@@ -238,6 +239,30 @@ mediaId · mediaSecret 을 인자로 넘기는 오버로드를 쓰고 있었다�
 `com.adiscope.luckyevent.tnk.TnkEventActivity` 는 **액티비티가 아닙니다.**
 옛 호출부가 쓰던 정적 메서드만 제공하는 껍데기이고 화면은 Revup 이 담당하므로,
 **AndroidManifest 에 선언하지 마세요.**
+
+<br/>
+
+### Kotlin 에서 호출하는 경우
+
+옛 Adiscope SDK 는 Java 로 작성되어 있어, 이를 호출하던 Kotlin 코드는 Java 관례대로 쓰여 있습니다.
+`revup_shim` 은 Kotlin 으로 작성되어 있어서 **1.0.7 에서는** 아래 호출이 컴파일되지 않습니다.
+Java 호출부는 해당하지 않습니다.
+
+| 기존 Kotlin 코드 | 1.0.7 에서 바꿀 코드 |
+| --- | --- |
+| `AdiscopeSdk.initialize(activity) { isSuccess -> ... }` | `AdiscopeSdk.initialize(activity, object : AdiscopeInitializeListener { override fun onInitialized(isSuccess: Boolean) { ... } })` |
+| `getUnitStatus(unitId) { error, status -> ... }` | `getUnitStatus(unitId, object : IUnitStatus { override fun onResult(error: AdiscopeError?, unitStatus: UnitStatus?) { ... } })` |
+| `error.code` · `error.description` · `error.xb3TraceId` | `error.getCode()` · `error.getDescription()` · `error.getXb3TraceId()` |
+| `rewardItem.amount` · `rewardItem.type` | `rewardItem.getAmount()` · `rewardItem.getType()` |
+| `unitStatus.isLive` · `unitStatus.isActive` | `unitStatus.isLive()` · `unitStatus.isActive()` |
+
+메서드가 여러 개인 리스너(`RewardedVideoAdListener` 등)는 원래 Java 에서도 람다로 쓸 수 없었으므로
+기존 `object :` 형태 그대로 두면 됩니다.
+
+**1.0.8 부터는 위 표의 왼쪽(기존 코드)이 수정 없이 컴파일됩니다.** 1.0.7 에 맞춰 오른쪽처럼 고쳤다면,
+1.0.8 로 올릴 때 getter 호출(`error.getCode()` · `rewardItem.getAmount()` · `unitStatus.isLive()`)은
+`Unresolved reference` 로 컴파일되지 않으므로 왼쪽 문법으로 되돌려 주세요.
+`object :` 로 바꾼 리스너는 그대로 두어도 됩니다.
 
 <br/>
 
@@ -272,6 +297,7 @@ mediaId · mediaSecret 을 인자로 넘기는 오버로드를 쓰고 있었다�
 ## 교체 후 확인
 
 * 의존성 트리에 `com.nps.adiscope` 가 남아 있지 않은지 (`./gradlew :app:dependencies`)
+* Kotlin 호출부가 있다면 [Kotlin 에서 호출하는 경우](#kotlin-에서-호출하는-경우) 의 수정이 반영되었는지
 * 교체 전후 어댑터 목록이 같은지
 * 초기화 콜백이 `isSuccess = true` 로 끝까지 실행되는지
 * 광고 포맷별 `load` → `isLoaded` → `show` 가 정상 동작하는지
