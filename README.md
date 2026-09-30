@@ -63,7 +63,7 @@
 * [Reward Callback](./docs/reward_callback_info.md)
 * [Third Party Event](./docs/event_guide.md)
 * [Adiscope Migration](./docs/adiscope_migration.md)
-* [Release Note](https://github.com/tnkfactory/REVUP-ANDROID-SDK/wiki/release_note)
+* [Release Note](https://github.com/revup-tnk/REVUP-ANDROID-SDK/wiki/release_note)
 
 <br/>
 
@@ -231,6 +231,33 @@ admob 혹은 max 어댑터 연동 시 애드몹 appId 메타데이터를 추가�
     </application>
 </manifest>
 ```
+
+<br/>
+
+#### 1-3. ProGuard / R8
+
+레브업 SDK 와 네트워크 어댑터는 필요한 ProGuard 규칙을 AAR 에 포함해 배포합니다.
+**매체 앱에서 별도의 규칙을 추가할 필요가 없습니다.**
+
+> **AGP 9 이상에서 `minifyEnabled true` 를 사용하는 경우**
+>
+> Android Gradle Plugin 9.0 부터 `android.r8.strictFullModeForKeepRules` 기본값이 `true` 로 바뀌어,
+> `-keep class A` 규칙이 기본 생성자를 더 이상 자동으로 유지하지 않습니다.
+>
+> 이 때 일부 네트워크 SDK 가 함께 가져오는 구버전 `androidx.work` / `androidx.room` 의 규칙이
+> 생성자를 유지하지 못해, **릴리즈 빌드가 실행 직후 아래와 같이 종료될 수 있습니다.**
+>
+> ```
+> java.lang.RuntimeException: Unable to get provider androidx.startup.InitializationProvider:
+>   Failed to create an instance of class androidx.work.impl.WorkDatabase
+> ```
+>
+> `max` 어댑터 **13.6.2.8** 부터 해결되었습니다. 해당 버전 이상을 사용해 주세요.
+> 빌드 후 실제로 적용된 버전은 아래 명령으로 확인할 수 있습니다.
+>
+> ```
+> ./gradlew :app:dependencies --configuration releaseRuntimeClasspath
+> ```
 
 <br/>
 
