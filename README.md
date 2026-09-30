@@ -3,7 +3,7 @@
 [![GitHub package.json version](https://img.shields.io/badge/iOS-1.1.5-blue)](https://github.com/revup-tnk/REVUP-iOS-SDK)
 
 ## Requirements
-- minSdkVersion 23
+- minSdkVersion 24
 - compileSdkVersion 36
 <details>
 <summary>Network Adapter Requirements</summary>
@@ -11,12 +11,12 @@
 
 | Adapter    | minSdk | bidding | in-house |
 |------------|--------|---------|----------|
-| admob      | 23     | -       | -        |
-| chartboost | 21     | -       | -        |
-| max        | 21     | O       | -        |
-| pangle     | 23     | -       | -        |
-| vungle     | 21     | -       | -        |
-| tnkpub     | 23     | -       | O        |
+| admob      | 24     | -       | -        |
+| chartboost | 24     | -       | -        |
+| max        | 24     | O       | -        |
+| pangle     | 24     | -       | -        |
+| vungle     | 24     | -       | -        |
+| tnkpub     | 24     | -       | O        |
 
 #### Network Version
 | Ad Network          | Android Version | MAX bidder |
@@ -120,7 +120,7 @@ bom 연동 방식을 권장.
 ```groovy
 dependencies {
     // bom으로 연동 시 어댑터별 버전을 명시하지 않아도 코어 모듈 버전으로 매핑된 버전의 어댑터가 자동으로 연동됨
-    Dependency revupBom = platform("com.tnkfactory.revup:revup-bom:1.0.7")
+    Dependency revupBom = platform("com.tnkfactory.revup:revup-bom:1.0.9")
     implementation revupBom
   
     // [required] revup core library
@@ -252,7 +252,7 @@ admob 혹은 max 어댑터 연동 시 애드몹 appId 메타데이터를 추가�
 >   Failed to create an instance of class androidx.work.impl.WorkDatabase
 > ```
 >
-> `max` 어댑터 **13.6.2.8** 부터 해결되었습니다. 해당 버전 이상을 사용해 주세요.
+> `max` 어댑터 **13.6.4.9** (`revup-bom 1.0.9`) 부터 해결되었습니다.
 > 빌드 후 실제로 적용된 버전은 아래 명령으로 확인할 수 있습니다.
 >
 > ```
