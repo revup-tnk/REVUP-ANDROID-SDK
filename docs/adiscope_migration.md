@@ -1,7 +1,7 @@
 # Adiscope → Revup 마이그레이션 (revup_shim)
 
 기존 Adiscope SDK 로 연동된 앱을 **호출부를 고치지 않고** Revup 으로 교체하기 위한 호환 모듈입니다.
-(Kotlin 으로 작성된 호출부는 1.0.7 에서 일부 수정이 필요합니다 — [Kotlin 에서 호출하는 경우](#kotlin-에서-호출하는-경우) 참고)
+(Kotlin 호출부도 1.0.8 부터 수정 없이 컴파일됩니다 — [Kotlin 에서 호출하는 경우](#kotlin-에서-호출하는-경우) 참고)
 
 이 문서 하나로 교체가 끝나도록 필요한 설정을 모두 담았습니다. 신규 연동이라면 대신
 [README](../README.md) 를 보세요.
@@ -87,7 +87,7 @@ dependencyResolutionManagement {
 
 ```
 Duplicate class com.nps.adiscope.AdiscopeSdk found in modules
-  adiscopeCore-5.4.3.aar and revup_shim-1.0.7.aar
+  adiscopeCore-5.4.3.aar and revup_shim-1.0.8.aar
 ```
 
 **제거 대상** — BOM, 코어, 어댑터 전부입니다.
@@ -116,7 +116,7 @@ dependencies {
 
 ```groovy
 dependencies {
-    Dependency revupBom = platform("com.tnkfactory.revup:revup-bom:1.0.7")
+    Dependency revupBom = platform("com.tnkfactory.revup:revup-bom:1.0.8")
     implementation revupBom
 
     // [required] revup core library
@@ -124,8 +124,8 @@ dependencies {
     implementation "com.tnkfactory.revup:revupAndroid"
 
     // [optional] adiscope 호환 계층
-    // BOM 관리 대상이 아니므로 버전을 직접 적어야 하며, BOM 버전과 같은 값을 사용합니다.
-    implementation "com.tnkfactory.revup:revup_shim:1.0.7"
+    // 1.0.8 부터 BOM 이 버전을 관리하므로 버전을 적지 않습니다.
+    implementation "com.tnkfactory.revup:revup_shim"
 
     // [optional] revup network adapter library
     // 쓰던 어댑터를 그대로 옮깁니다. 아티팩트명은 같고 group 만 다릅니다.
@@ -138,9 +138,8 @@ dependencies {
 }
 ```
 
-<span style="color:red">`revup_shim` 은 BOM 이 버전을 고정하지 않습니다.</span>
-버전을 생략하면 해석에 실패하고, BOM 과 다른 값을 적으면 코어 모듈 버전이 어긋납니다.
-**BOM 을 올릴 때 이 줄도 같이 올려 주세요.**
+**1.0.8 부터 `revup_shim` 은 BOM 관리 대상입니다.** 버전을 적지 않으면 BOM 이 코어와 같은
+버전으로 맞춰 줍니다. 1.0.7 이하를 쓰신다면 BOM 과 같은 값을 직접 적어야 합니다.
 
 `revup_shim` 은 `revupCore` · `revupAndroid` · `revupLuckyEvent` 를 함께 가져옵니다.
 
@@ -153,7 +152,7 @@ dependencies {
 
 group 만 바뀌고 아티팩트명은 같습니다. 버전은 BOM 이 관리하므로 적지 않습니다.
 
-| 기존 | 교체 후 | BOM 1.0.7 기준 버전 |
+| 기존 | 교체 후 | BOM 1.0.8 기준 버전 |
 | --- | --- | --- |
 | `com.nps.adiscope:adapter.admob` | `com.tnkfactory.revup:adapter.admob` | 25.2.0.6 |
 | `com.nps.adiscope:adapter.max` | `com.tnkfactory.revup:adapter.max` | 13.6.2.7 |
@@ -173,11 +172,11 @@ group 만 바뀌고 아티팩트명은 같습니다. 버전은 BOM 이 관리하
 
 ```kotlin
 dependencies {
-    implementation(platform("com.tnkfactory.revup:revup-bom:1.0.7"))
+    implementation(platform("com.tnkfactory.revup:revup-bom:1.0.8"))
 
     implementation("com.tnkfactory.revup:revupCore")
     implementation("com.tnkfactory.revup:revupAndroid")
-    implementation("com.tnkfactory.revup:revup_shim:1.0.7")
+    implementation("com.tnkfactory.revup:revup_shim")
 
     implementation("com.tnkfactory.revup:adapter.admob")
     // ... 그밖의 어댑터
@@ -245,10 +244,24 @@ mediaId · mediaSecret 을 인자로 넘기는 오버로드를 쓰고 있었다�
 ### Kotlin 에서 호출하는 경우
 
 옛 Adiscope SDK 는 Java 로 작성되어 있어, 이를 호출하던 Kotlin 코드는 Java 관례대로 쓰여 있습니다.
-`revup_shim` 은 Kotlin 으로 작성되어 있어서 **1.0.7 에서는** 아래 호출이 컴파일되지 않습니다.
-Java 호출부는 해당하지 않습니다.
+**1.0.8 부터는 그 코드가 수정 없이 그대로 컴파일됩니다.** Java 호출부는 버전과 무관하게 영향이 없습니다.
 
-| 기존 Kotlin 코드 | 1.0.7 에서 바꿀 코드 |
+```kotlin
+AdiscopeSdk.initialize(activity) { isSuccess -> ... }   // 람다 그대로
+val code = error.code                                   // 프로퍼티 그대로
+val amount = rewardItem.amount
+val live = unitStatus.isLive
+```
+
+메서드가 여러 개인 리스너(`RewardedVideoAdListener` 등)는 원래 Java 에서도 람다로 쓸 수 없었으므로
+기존 `object :` 형태 그대로 둡니다.
+
+#### 1.0.7 이하를 쓰는 경우
+
+`revup_shim` 이 Kotlin 으로 작성되어 있어 아래 호출이 컴파일되지 않습니다. 가능하면 1.0.8 이상으로
+올리시고, 그렇지 않다면 오른쪽처럼 고쳐야 합니다.
+
+| 기존 Kotlin 코드 | 1.0.7 이하에서 바꿀 코드 |
 | --- | --- |
 | `AdiscopeSdk.initialize(activity) { isSuccess -> ... }` | `AdiscopeSdk.initialize(activity, object : AdiscopeInitializeListener { override fun onInitialized(isSuccess: Boolean) { ... } })` |
 | `getUnitStatus(unitId) { error, status -> ... }` | `getUnitStatus(unitId, object : IUnitStatus { override fun onResult(error: AdiscopeError?, unitStatus: UnitStatus?) { ... } })` |
@@ -256,13 +269,20 @@ Java 호출부는 해당하지 않습니다.
 | `rewardItem.amount` · `rewardItem.type` | `rewardItem.getAmount()` · `rewardItem.getType()` |
 | `unitStatus.isLive` · `unitStatus.isActive` | `unitStatus.isLive()` · `unitStatus.isActive()` |
 
-메서드가 여러 개인 리스너(`RewardedVideoAdListener` 등)는 원래 Java 에서도 람다로 쓸 수 없었으므로
-기존 `object :` 형태 그대로 두면 됩니다.
+1.0.7 이하에 맞춰 오른쪽처럼 고쳐 두었다면, 1.0.8 로 올릴 때 getter 호출
+(`error.getCode()` · `rewardItem.getAmount()` · `unitStatus.isLive()`)이 `Unresolved reference` 로
+컴파일되지 않습니다. 왼쪽 문법으로 되돌려 주세요. `object :` 로 바꾼 리스너는 그대로 두어도 됩니다.
 
-**1.0.8 부터는 위 표의 왼쪽(기존 코드)이 수정 없이 컴파일됩니다.** 1.0.7 에 맞춰 오른쪽처럼 고쳤다면,
-1.0.8 로 올릴 때 getter 호출(`error.getCode()` · `rewardItem.getAmount()` · `unitStatus.isLive()`)은
-`Unresolved reference` 로 컴파일되지 않으므로 왼쪽 문법으로 되돌려 주세요.
-`object :` 로 바꾼 리스너는 그대로 두어도 됩니다.
+#### Kotlin 단위 테스트에서 AdiscopeSdk 를 대체할 때
+
+`AdiscopeSdk` 의 정적 메서드는 Kotlin `companion object` 로 제공됩니다. Kotlin 호출은 companion 을
+거치므로, MockK 로 대체할 때 `mockkStatic` 이 아니라 `mockkObject` 를 써야 합니다.
+(`@JvmStatic` 브리지가 있어 Java 호출부와 앱 동작에는 영향이 없습니다.)
+
+```kotlin
+mockkObject(AdiscopeSdk)        // O
+// mockkStatic(AdiscopeSdk::class)  // X — Kotlin 호출부에는 적용되지 않습니다
+```
 
 <br/>
 

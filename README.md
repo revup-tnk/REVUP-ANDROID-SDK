@@ -1,5 +1,5 @@
 # Revup-Android-Sample
-[![GitHub package.json version](https://img.shields.io/badge/Android-1.0.7-blue)](../../releases)
+[![GitHub package.json version](https://img.shields.io/badge/Android-1.0.8-blue)](../../releases)
 [![GitHub package.json version](https://img.shields.io/badge/iOS-1.1.5-blue)](https://github.com/revup-tnk/REVUP-iOS-SDK)
 
 ## Requirements
@@ -120,7 +120,7 @@ bom 연동 방식을 권장.
 ```groovy
 dependencies {
     // bom으로 연동 시 어댑터별 버전을 명시하지 않아도 코어 모듈 버전으로 매핑된 버전의 어댑터가 자동으로 연동됨
-    Dependency revupBom = platform("com.tnkfactory.revup:revup-bom:1.0.7")
+    Dependency revupBom = platform("com.tnkfactory.revup:revup-bom:1.0.8")
     implementation revupBom
   
     // [required] revup core library
@@ -128,9 +128,9 @@ dependencies {
     implementation "com.tnkfactory.revup:revupAndroid"
 
     // [optional] adiscope 호환 계층 - 기존 adiscope 연동을 교체하는 경우에만 추가
-    // bom 관리 대상이 아니므로 버전을 직접 적으며, bom 과 같은 값을 사용
+    // 1.0.8 부터 bom 관리 대상이므로 버전을 적지 않습니다
     // 자세한 내용은 docs/adiscope_migration.md 참고
-    // implementation "com.tnkfactory.revup:revup_shim:1.0.7"
+    // implementation "com.tnkfactory.revup:revup_shim"
 
     // [optional] revup lucky event library
     implementation "com.tnkfactory.revup:revupLuckyEvent"
@@ -174,11 +174,11 @@ dependencies {
 ```groovy
 dependencies {
     // [required] revup core library
-    implementation "com.tnkfactory.revup:revupCore:1.0.7"
-    implementation "com.tnkfactory.revup:revupAndroid:1.0.7"
+    implementation "com.tnkfactory.revup:revupCore:1.0.8"
+    implementation "com.tnkfactory.revup:revupAndroid:1.0.8"
 
     // [optional] revup lucky event library
-    implementation "com.tnkfactory.revup:revupLuckyEvent:1.0.7"
+    implementation "com.tnkfactory.revup:revupLuckyEvent:1.0.8"
   
     // [optional] revup network adapter library
     // bidding, waterfall adapter
