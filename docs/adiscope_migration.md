@@ -87,7 +87,7 @@ dependencyResolutionManagement {
 
 ```
 Duplicate class com.nps.adiscope.AdiscopeSdk found in modules
-  adiscopeCore-5.4.3.aar and revup_shim-1.0.8.aar
+  adiscopeCore-5.4.3.aar and revup_shim-1.0.9.aar
 ```
 
 **제거 대상** — BOM, 코어, 어댑터 전부입니다.
@@ -116,7 +116,7 @@ dependencies {
 
 ```groovy
 dependencies {
-    Dependency revupBom = platform("com.tnkfactory.revup:revup-bom:1.0.8")
+    Dependency revupBom = platform("com.tnkfactory.revup:revup-bom:1.0.9")
     implementation revupBom
 
     // [required] revup core library
@@ -152,14 +152,14 @@ dependencies {
 
 group 만 바뀌고 아티팩트명은 같습니다. 버전은 BOM 이 관리하므로 적지 않습니다.
 
-| 기존 | 교체 후 | BOM 1.0.8 기준 버전 |
+| 기존 | 교체 후 | BOM 1.0.9 기준 버전 |
 | --- | --- | --- |
-| `com.nps.adiscope:adapter.admob` | `com.tnkfactory.revup:adapter.admob` | 25.2.0.6 |
-| `com.nps.adiscope:adapter.max` | `com.tnkfactory.revup:adapter.max` | 13.6.2.7 |
-| `com.nps.adiscope:adapter.chartboost` | `com.tnkfactory.revup:adapter.chartboost` | 9.11.0.6 |
-| `com.nps.adiscope:adapter.pangle` | `com.tnkfactory.revup:adapter.pangle` | 7.9.1.3.7 |
-| `com.nps.adiscope:adapter.vungle` | `com.tnkfactory.revup:adapter.vungle` | 7.7.3.6 |
-| `com.nps.adiscope:adapter.tnkpub` | `com.tnkfactory.revup:adapter.tnkpub` | 7.25.11.6 |
+| `com.nps.adiscope:adapter.admob` | `com.tnkfactory.revup:adapter.admob` | 25.5.0.9 |
+| `com.nps.adiscope:adapter.max` | `com.tnkfactory.revup:adapter.max` | 13.6.4.9 |
+| `com.nps.adiscope:adapter.chartboost` | `com.tnkfactory.revup:adapter.chartboost` | 9.14.1.9 |
+| `com.nps.adiscope:adapter.pangle` | `com.tnkfactory.revup:adapter.pangle` | 8.3.0.4.9 |
+| `com.nps.adiscope:adapter.vungle` | `com.tnkfactory.revup:adapter.vungle` | 7.7.8.9 |
+| `com.nps.adiscope:adapter.tnkpub` | `com.tnkfactory.revup:adapter.tnkpub` | 7.25.11.9 |
 
 어댑터를 빠뜨리면 초기화는 성공하지만 광고가 채워지지 않습니다. 빌드도 통과하고 에러도 없으므로
 교체 전후의 어댑터 목록을 반드시 대조해 주세요.
@@ -172,7 +172,7 @@ group 만 바뀌고 아티팩트명은 같습니다. 버전은 BOM 이 관리하
 
 ```kotlin
 dependencies {
-    implementation(platform("com.tnkfactory.revup:revup-bom:1.0.8"))
+    implementation(platform("com.tnkfactory.revup:revup-bom:1.0.9"))
 
     implementation("com.tnkfactory.revup:revupCore")
     implementation("com.tnkfactory.revup:revupAndroid")

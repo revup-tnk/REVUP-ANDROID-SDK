@@ -1,9 +1,9 @@
 # Revup-Android-Sample
-[![GitHub package.json version](https://img.shields.io/badge/Android-1.0.8-blue)](../../releases)
+[![GitHub package.json version](https://img.shields.io/badge/Android-1.0.9-blue)](../../releases)
 [![GitHub package.json version](https://img.shields.io/badge/iOS-1.1.5-blue)](https://github.com/revup-tnk/REVUP-iOS-SDK)
 
 ## Requirements
-- minSdkVersion 23
+- minSdkVersion 24
 - compileSdkVersion 36
 <details>
 <summary>Network Adapter Requirements</summary>
@@ -11,35 +11,35 @@
 
 | Adapter    | minSdk | bidding | in-house |
 |------------|--------|---------|----------|
-| admob      | 23     | -       | -        |
-| chartboost | 21     | -       | -        |
-| max        | 21     | O       | -        |
-| pangle     | 23     | -       | -        |
-| vungle     | 21     | -       | -        |
-| tnkpub     | 23     | -       | O        |
+| admob      | 24     | -       | -        |
+| chartboost | 24     | -       | -        |
+| max        | 24     | O       | -        |
+| pangle     | 24     | -       | -        |
+| vungle     | 24     | -       | -        |
+| tnkpub     | 24     | -       | O        |
 
 #### Network Version
 | Ad Network          | Android Version | MAX bidder |
 |---------------------|-----------------|------------|
-| AdMob               | 25.2.0          | O          |
-| AppLovin            | 13.6.2          | O          |
-| BidMachine          | 3.6.1           | O          |
-| Bigo                | 5.8.2           | O          |
-| Chartboost          | 9.11.0          | O          |
-| DT Exchange         | 8.4.4           | O          |
-| InMobi              | 11.2.0          | O          |
-| Ironsource          | 9.4.0           | O          |
-| Liftoff(Vungle)     | 7.7.3           | O          |
-| Line                | 3000.0.1        | O          |
-| Meta(Fan)           | 6.21.0          | O          |
-| Mintegral(Mobvista) | 17.1.51         | O          |
-| Moloco              | 4.8.0           | O          |
-| Ogury               | 6.2.2           | O          |
-| Pangle              | 7.9.1.3         | O          |
-| Pubmatic            | 4.11.0          | O          |
+| AdMob               | 25.5.0          | O          |
+| AppLovin            | 13.6.4          | O          |
+| BidMachine          | 3.8.0           | O          |
+| Bigo                | 6.1.0           | O          |
+| Chartboost          | 9.14.1          | O          |
+| DT Exchange         | 8.4.7           | O          |
+| InMobi              | 11.4.1          | O          |
+| Ironsource          | 9.6.0           | O          |
+| Liftoff(Vungle)     | 7.7.8           | O          |
+| Line                | 3000.1.1        | O          |
+| Meta(Fan)           | 6.22.0          | O          |
+| Mintegral(Mobvista) | 17.1.81         | O          |
+| Moloco              | 4.12.0          | O          |
+| Ogury               | 6.3.1           | O          |
+| Pangle              | 8.3.0.4         | O          |
+| Pubmatic            | 5.4.1           | O          |
 | TNKPub              | 7.25.11         | -          |
-| Unity Ads           | 4.16.6          | O          |
-| Verve               | 3.8.1           | O          |
+| Unity Ads           | 4.20.1          | O          |
+| Verve               | 3.9.2           | O          |
 
 > ⚠️ 애드몹 SDK(`com.google.android.gms:play-services-ads`)를 프로젝트에 이미 포함하고 있는 경우 버전 호환에 유의   
 > 기존에 gms SDK 사용중인 퍼블리셔는 admob, max 어댑터 사용 시 25버전으로 마이그레이션 필요 [(관련 문서)](https://developers.google.com/admob/android/migration?hl=en)
@@ -63,7 +63,7 @@
 * [Reward Callback](./docs/reward_callback_info.md)
 * [Third Party Event](./docs/event_guide.md)
 * [Adiscope Migration](./docs/adiscope_migration.md)
-* [Release Note](https://github.com/tnkfactory/REVUP-ANDROID-SDK/wiki/release_note)
+* [Release Note](./docs/release_note.md)
 
 <br/>
 
@@ -120,7 +120,7 @@ bom 연동 방식을 권장.
 ```groovy
 dependencies {
     // bom으로 연동 시 어댑터별 버전을 명시하지 않아도 코어 모듈 버전으로 매핑된 버전의 어댑터가 자동으로 연동됨
-    Dependency revupBom = platform("com.tnkfactory.revup:revup-bom:1.0.8")
+    Dependency revupBom = platform("com.tnkfactory.revup:revup-bom:1.0.9")
     implementation revupBom
   
     // [required] revup core library
@@ -174,11 +174,11 @@ dependencies {
 ```groovy
 dependencies {
     // [required] revup core library
-    implementation "com.tnkfactory.revup:revupCore:1.0.8"
-    implementation "com.tnkfactory.revup:revupAndroid:1.0.8"
+    implementation "com.tnkfactory.revup:revupCore:1.0.9"
+    implementation "com.tnkfactory.revup:revupAndroid:1.0.9"
 
     // [optional] revup lucky event library
-    implementation "com.tnkfactory.revup:revupLuckyEvent:1.0.8"
+    implementation "com.tnkfactory.revup:revupLuckyEvent:1.0.9"
   
     // [optional] revup network adapter library
     // bidding, waterfall adapter
