@@ -2,6 +2,11 @@
 [![GitHub package.json version](https://img.shields.io/badge/Android-1.0.9-blue)](../../releases)
 [![GitHub package.json version](https://img.shields.io/badge/iOS-1.1.5-blue)](https://github.com/revup-tnk/REVUP-iOS-SDK)
 
+
+## release 1.0.9 
+- [release note](./docs/release_note.md)
+
+
 ## Requirements
 - minSdkVersion 24
 - compileSdkVersion 36
