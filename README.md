@@ -67,6 +67,7 @@
 * [Error Information](./docs/error_info.md)
 * [Reward Callback](./docs/reward_callback_info.md)
 * [Third Party Event](./docs/event_guide.md)
+* [MAX Ad Review](./docs/max_ad_review.md)
 * [Adiscope Migration](./docs/adiscope_migration.md)
 * [Release Note](./docs/release_note.md)
 
