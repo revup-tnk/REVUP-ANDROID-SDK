@@ -87,7 +87,7 @@ dependencyResolutionManagement {
 
 ```
 Duplicate class com.nps.adiscope.AdiscopeSdk found in modules
-  adiscopeCore-5.4.3.aar and revup_shim-1.0.9.aar
+  adiscopeCore-5.4.3.aar and revup_shim-1.0.10.aar
 ```
 
 **제거 대상** — BOM, 코어, 어댑터 전부입니다.
@@ -116,7 +116,7 @@ dependencies {
 
 ```groovy
 dependencies {
-    Dependency revupBom = platform("com.tnkfactory.revup:revup-bom:1.0.9")
+    Dependency revupBom = platform("com.tnkfactory.revup:revup-bom:1.0.10")
     implementation revupBom
 
     // [required] revup core library
@@ -152,7 +152,7 @@ dependencies {
 
 group 만 바뀌고 아티팩트명은 같습니다. 버전은 BOM 이 관리하므로 적지 않습니다.
 
-| 기존 | 교체 후 | BOM 1.0.9 기준 버전 |
+| 기존 | 교체 후 | BOM 1.0.10 기준 버전 |
 | --- | --- | --- |
 | `com.nps.adiscope:adapter.admob` | `com.tnkfactory.revup:adapter.admob` | 25.5.0.9 |
 | `com.nps.adiscope:adapter.max` | `com.tnkfactory.revup:adapter.max` | 13.6.4.9 |
@@ -172,7 +172,7 @@ group 만 바뀌고 아티팩트명은 같습니다. 버전은 BOM 이 관리하
 
 ```kotlin
 dependencies {
-    implementation(platform("com.tnkfactory.revup:revup-bom:1.0.9"))
+    implementation(platform("com.tnkfactory.revup:revup-bom:1.0.10"))
 
     implementation("com.tnkfactory.revup:revupCore")
     implementation("com.tnkfactory.revup:revupAndroid")
