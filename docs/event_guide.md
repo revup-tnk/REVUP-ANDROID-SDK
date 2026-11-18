@@ -12,7 +12,7 @@
 
 ### 이벤트 모듈 참조 추가
 ```groovy
-implementation "com.tnkfactory.revup:revupLuckyEvent:1.0.10"
+implementation "com.tnkfactory.revup:revupLuckyEvent:1.0.11"
 ```
 
 
@@ -154,6 +154,16 @@ TnkEventActivity.TnkEventBuilder()
 
 ### Method
 
+- 열려 있는 이벤트 화면을 닫습니다. (`1.0.11` 이상, **권장**)
+- `boolean RevupLuckyEvent.closeLuckyEvent()`
+- 반환값: 닫았거나 띄우기 전에 취소한 화면이 있으면 `true`. 열린 화면이 없으면 아무 일도 하지 않고 `false` 를 반환합니다.
+- 화면 위에서 광고가 재생 중이면 광고도 함께 닫히며, **이 경우 보상은 지급되지 않습니다.**
+- `show` 직후 화면이 아직 뜨기 전이면 뜨지 않도록 취소합니다. 닫은 직후 다시 `show` 해도 정상적으로 열립니다.
+- 앱에서 이벤트 화면을 직접 `finish` 하지 말고 이 함수를 사용해 주세요.
+
+- 이벤트 화면이 열려 있는지 확인합니다. (`1.0.11` 이상)
+- `boolean RevupLuckyEvent.isLuckyEventShowing()`
+
 - 이벤트 화면 종료를 요청합니다. (브로드캐스트 방식)
 - `void TnkEventActivity.sendFinishBroadcast(context: Context)`
 
@@ -167,7 +177,15 @@ TnkEventActivity.TnkEventBuilder()
 #### sample
 
 ```kotlin
-// 알림 진입 화면 등에서 호출
+// 알림 진입 화면 등에서 호출 (1.0.11 이상)
+if (RevupLuckyEvent.isLuckyEventShowing()) {
+    RevupLuckyEvent.closeLuckyEvent()
+}
+```
+
+`1.0.10` 이하에서는 브로드캐스트로 요청합니다.
+
+```kotlin
 TnkEventActivity.sendFinishBroadcast(context)
 ```
 
@@ -270,6 +288,69 @@ RevupLuckyEvent.setEventListener(new RevupLuckyEventListener() {
 
 > 이 콜백은 **이벤트 화면 안에서 노출되는 광고**만 대상으로 합니다.
 > 매체가 별도 지면에서 직접 호출하는 리워드 영상·전면광고는 각 광고의 리스너를 사용하세요.
+
+
+---
+
+## 이벤트 화면 열림 / 닫힘 콜백
+
+이벤트 화면 자체가 열리고 닫히는 시점을 전달받습니다. (`1.0.11` 이상)
+화면이 떠 있는 동안 앱의 배경 음악을 멈추는 등, 화면 상태에 맞춰 앱 동작을 바꿀 때 사용합니다.
+
+### Method
+
+- 리스너를 등록합니다. `null` 을 전달하면 해제됩니다.
+- `void RevupLuckyEvent.setStateListener(listener: RevupLuckyEventStateListener?)`
+
+### RevupLuckyEventStateListener
+
+| 콜백 | 시점 |
+| --- | --- |
+| `onLuckyEventOpened()` | 이벤트 화면이 열렸을 때 |
+| `onLuckyEventClosed()` | 이벤트 화면이 닫혔을 때 |
+
+- 콜백은 항상 메인 스레드에서 실행됩니다.
+- `onLuckyEventClosed` 는 닫기 버튼, 뒤로 가기, `closeLuckyEvent()`, 화면 교체 등 **닫힌 경로와 관계없이 화면 하나당 한 번** 호출됩니다.
+- 이벤트 화면이 열린 상태에서 다시 열면(딥링크 진입 등) 기존 화면을 닫고 새 화면을 띄웁니다.
+  이때 순서는 항상 `onLuckyEventClosed`(이전 화면) → `onLuckyEventOpened`(새 화면) 입니다.
+
+#### sample
+
+```kotlin
+class SampleApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+
+        RevupLuckyEvent.setStateListener(object : RevupLuckyEventStateListener {
+            override fun onLuckyEventOpened() {
+                Log.d(TAG, "lucky event opened")
+            }
+
+            override fun onLuckyEventClosed() {
+                Log.d(TAG, "lucky event closed")
+            }
+        })
+    }
+}
+```
+
+```java
+RevupLuckyEvent.setStateListener(new RevupLuckyEventStateListener() {
+    @Override
+    public void onLuckyEventOpened() {
+        Log.d(TAG, "lucky event opened");
+    }
+
+    @Override
+    public void onLuckyEventClosed() {
+        Log.d(TAG, "lucky event closed");
+    }
+});
+```
+
+> **리스너는 Application 에서 등록하세요.**
+> `setEventListener` 와 마찬가지로 프로세스 전역에 보관됩니다.
+> `Activity` 에서 등록해야 한다면 `onDestroy()` 에서 `setStateListener(null)` 로 해제해야 합니다.
 
 
 ---
@@ -377,8 +458,12 @@ TnkEventActivity.TnkEventBuilder()
 }
 ```
 
-<span style="color:red">이 규칙이 없으면 release 빌드에서만 동작하지 않습니다.</span>
+<span style="color:red">`1.0.10` 이하에서는 이 규칙이 없으면 release 빌드에서만 동작하지 않습니다.</span>
 앱 코드에서 직접 호출하지 않는 메서드라 R8 이 제거하거나 이름을 바꿉니다.
+
+> **`1.0.11` 부터는 SDK 가 같은 규칙을 포함합니다.** 기본 생성자와 `adEventWebViewNavigated` 메서드를 가진 클래스를 SDK 규칙이 유지하므로
+> 위 규칙을 추가하지 않아도 됩니다. 이미 추가해 두었다면 그대로 두어도 무방합니다.
+
 디버그 빌드에서 확인했더라도 **난독화된 release 빌드로 반드시 다시 확인**해 주세요.
 
 ### SDK 기본 처리 항목

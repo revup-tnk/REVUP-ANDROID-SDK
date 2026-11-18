@@ -1,9 +1,9 @@
 # Revup-Android-Sample
-[![GitHub package.json version](https://img.shields.io/badge/Android-1.0.10-blue)](../../releases)
+[![GitHub package.json version](https://img.shields.io/badge/Android-1.0.11-blue)](../../releases)
 [![GitHub package.json version](https://img.shields.io/badge/iOS-1.1.5-blue)](https://github.com/revup-tnk/REVUP-iOS-SDK)
 
 
-## release 1.0.10 
+## release 1.0.11 
 - [release note](./docs/release_note.md)
 
 
@@ -42,7 +42,7 @@
 | Ogury               | 6.3.1           | O          |
 | Pangle              | 8.3.0.4         | O          |
 | Pubmatic            | 5.4.1           | O          |
-| TNKPub              | 7.25.11         | -          |
+| TNKPub              | 7.25.19         | -          |
 | Unity Ads           | 4.20.1          | O          |
 | Verve               | 3.9.2           | O          |
 
@@ -126,7 +126,7 @@ bom 연동 방식을 권장.
 ```groovy
 dependencies {
     // bom으로 연동 시 어댑터별 버전을 명시하지 않아도 코어 모듈 버전으로 매핑된 버전의 어댑터가 자동으로 연동됨
-    Dependency revupBom = platform("com.tnkfactory.revup:revup-bom:1.0.10")
+    Dependency revupBom = platform("com.tnkfactory.revup:revup-bom:1.0.11")
     implementation revupBom
   
     // [required] revup core library
@@ -180,26 +180,26 @@ dependencies {
 ```groovy
 dependencies {
     // [required] revup core library
-    implementation "com.tnkfactory.revup:revupCore:1.0.10"
-    implementation "com.tnkfactory.revup:revupAndroid:1.0.10"
+    implementation "com.tnkfactory.revup:revupCore:1.0.11"
+    implementation "com.tnkfactory.revup:revupAndroid:1.0.11"
 
     // [optional] revup lucky event library
-    implementation "com.tnkfactory.revup:revupLuckyEvent:1.0.10"
+    implementation "com.tnkfactory.revup:revupLuckyEvent:1.0.11"
   
     // [optional] revup network adapter library
     // bidding, waterfall adapter
-    implementation "com.tnkfactory.revup:adapter.admob:25.5.0.9"
+    implementation "com.tnkfactory.revup:adapter.admob:25.5.0.11"
     
     // bidding adapter
-    implementation "com.tnkfactory.revup:adapter.max:13.6.4.9"
+    implementation "com.tnkfactory.revup:adapter.max:13.6.4.11"
 
     // waterfall adapter
-    implementation "com.tnkfactory.revup:adapter.chartboost:9.14.1.9"
-    implementation "com.tnkfactory.revup:adapter.pangle:8.3.0.4.9"
-    implementation "com.tnkfactory.revup:adapter.vungle:7.7.8.9"
+    implementation "com.tnkfactory.revup:adapter.chartboost:9.14.1.11"
+    implementation "com.tnkfactory.revup:adapter.pangle:8.3.0.4.11"
+    implementation "com.tnkfactory.revup:adapter.vungle:7.7.8.11"
 
     // direct sold adapter
-    implementation "com.tnkfactory.revup:adapter.tnkpub:7.25.11.9"
+    implementation "com.tnkfactory.revup:adapter.tnkpub:7.25.19.11"
 }
 ```
 <br/>
@@ -244,6 +244,12 @@ admob 혹은 max 어댑터 연동 시 애드몹 appId 메타데이터를 추가�
 
 레브업 SDK 와 네트워크 어댑터는 필요한 ProGuard 규칙을 AAR 에 포함해 배포합니다.
 **매체 앱에서 별도의 규칙을 추가할 필요가 없습니다.**
+
+> **`1.0.11` 부터 SDK 가 싣는 keep 규칙을 실행 중 이름으로 찾는 대상만 남기도록 줄였습니다.**
+> 앱의 R8 축소·최적화·난독화 효과가 커집니다.
+> - 예전 가이드에 따라 앱 규칙에 `-keep class com.tnkfactory.** { *; }` 를 넣어 두셨다면 지워 주세요
+> - SDK 규칙을 무시하도록 처리해 두셨다면 원래대로 되돌려 주세요
+> - 어댑터 `.11` 은 SDK `1.0.11` 과 함께 써야 하므로 BOM 으로 받아 주세요
 
 > **AGP 9 이상에서 `minifyEnabled true` 를 사용하는 경우**
 >
